@@ -134,7 +134,7 @@ export const Layout: FC = ({ children }) => {
             noWrap
             className={classes.title}
           >
-            Dashboard
+            Goaler
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
