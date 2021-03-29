@@ -51,6 +51,18 @@ const rows = [
     level3: 10,
     progress: 5,
   },
+  {
+    name: "Miracle morning",
+    inspiration: {
+      name: "Hal Elrod",
+      link: null,
+    },
+    explanation: "Miracle Morning z rzędu",
+    level1: 30,
+    level2: 90,
+    level3: 365,
+    progress: 11,
+  },
 ];
 
 export const Goals = () => {

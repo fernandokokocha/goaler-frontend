@@ -7,6 +7,13 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import { ProgressBar } from "react-bootstrap";
+
+type x = {
+  current: number;
+  max: number;
+  percent: number;
+};
 
 const useStyles = makeStyles({
   table: {
@@ -14,7 +21,7 @@ const useStyles = makeStyles({
   },
 });
 
-const X = ({
+const LevelTableCell = ({
   level,
   reached,
   previousReached,
@@ -23,25 +30,35 @@ const X = ({
   reached: boolean;
   previousReached: boolean;
 }) => {
+  let col;
   if (reached) {
-    return (
-      <TableCell align="right" style={{ backgroundColor: "yellow" }}>
-        {level}
-      </TableCell>
-    );
-  }
-
-  if (!reached && previousReached) {
-    return (
-      <TableCell align="right" style={{ backgroundColor: "lightGreen" }}>
-        {level}
-      </TableCell>
-    );
+    col = "yellow";
+  } else if (!reached && previousReached) {
+    col = "lightGreen";
+  } else {
+    col = "lightGrey";
   }
 
   return (
-    <TableCell align="right" style={{ backgroundColor: "lightGrey" }}>
+    <TableCell align="right" style={{ backgroundColor: col }}>
       {level}
+    </TableCell>
+  );
+};
+
+const CurrentTableCell = ({
+  current,
+  max,
+  percent,
+}: {
+  current: number;
+  max: number;
+  percent: number;
+}) => {
+  return (
+    <TableCell align="right">
+      {`${current} / ${max}`}
+      <ProgressBar now={percent} label={`${percent}%`} variant="info" />
     </TableCell>
   );
 };
@@ -52,6 +69,35 @@ export const GoalList = ({ goals }: { goals: any }) => {
   const reached = (level: number, progress: number): boolean =>
     progress >= level;
 
+  const calcPercent = (level: number, progress: number): number => {
+    const num = Math.floor((progress / level) * 100);
+    return Math.min(num, 100);
+  };
+
+  const findCurrent = (row: any): x => {
+    if (calcPercent(row.level1, row.progress) < 100) {
+      return {
+        current: row.progress,
+        max: row.level1,
+        percent: calcPercent(row.level1, row.progress),
+      };
+    }
+
+    if (calcPercent(row.level2, row.progress) < 100) {
+      return {
+        current: row.progress,
+        max: row.level2,
+        percent: calcPercent(row.level2, row.progress),
+      };
+    }
+
+    return {
+      current: row.progress,
+      max: row.level3,
+      percent: calcPercent(row.level3, row.progress),
+    };
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table" size="small">
@@ -61,10 +107,10 @@ export const GoalList = ({ goals }: { goals: any }) => {
             <TableCell align="right">Nazwa</TableCell>
             <TableCell align="right">Inspiracja</TableCell>
             <TableCell align="right">O co chodzi</TableCell>
+            <TableCell align="right" style={{ minWidth: 250 }}>Current</TableCell>
             <TableCell align="right">Poziom 1</TableCell>
             <TableCell align="right">Poziom 2</TableCell>
             <TableCell align="right">Poziom 3</TableCell>
-            <TableCell align="right">Progres</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -80,22 +126,26 @@ export const GoalList = ({ goals }: { goals: any }) => {
                 )}
               </TableCell>
               <TableCell align="right">{row.explanation}</TableCell>
-              <X
+              <CurrentTableCell
+                current={findCurrent(row).current}
+                max={findCurrent(row).max}
+                percent={findCurrent(row).percent}
+              ></CurrentTableCell>
+              <LevelTableCell
                 level={row.level1}
                 reached={reached(row.level1, row.progress)}
                 previousReached={true}
-              ></X>
-              <X
+              ></LevelTableCell>
+              <LevelTableCell
                 level={row.level2}
                 reached={reached(row.level2, row.progress)}
                 previousReached={reached(row.level1, row.progress)}
-              ></X>
-              <X
+              ></LevelTableCell>
+              <LevelTableCell
                 level={row.level3}
                 reached={reached(row.level3, row.progress)}
                 previousReached={reached(row.level2, row.progress)}
-              ></X>
-              <TableCell align="right">{row.progress}</TableCell>
+              ></LevelTableCell>
             </TableRow>
           ))}
         </TableBody>
