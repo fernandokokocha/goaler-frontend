@@ -14,10 +14,11 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
   const [inspiration, setInspiration] = useState("");
   const [link, setLink] = useState("");
   const [explanation, setExplanation] = useState("");
-  const [level1, setLevel1] = useState(0);
-  const [level2, setLevel2] = useState(0);
-  const [level3, setLevel3] = useState(0);
+  const [level1, setLevel1] = useState(10);
+  const [level2, setLevel2] = useState(100);
+  const [level3, setLevel3] = useState(1000);
   const [progress, setProgress] = useState(0);
+  const [visualization, setVisualization] = useState("");
 
   const handleAddGoal = () => {
     addGoal({
@@ -43,7 +44,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
       <Paper>
         <Grid container justify="flex-start" spacing={2}>
           <Grid item xs={12}>
-            <FormControl style={{ width: '100%' }}>
+            <FormControl style={{ width: "100%" }}>
               <InputLabel htmlFor="my-input">Nazwa</InputLabel>
               <Input
                 id="my-input"
@@ -53,7 +54,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-            <FormControl style={{ width: '100%' }}>
+            <FormControl style={{ width: "100%" }}>
               <InputLabel htmlFor="my-input-0">Inspiracja</InputLabel>
               <Input
                 id="my-input-0"
@@ -63,7 +64,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
             </FormControl>
           </Grid>
           <Grid item xs={6}>
-            <FormControl style={{ width: '100%' }}>
+            <FormControl style={{ width: "100%" }}>
               <InputLabel htmlFor="my-input-0">Link (opcjonalny)</InputLabel>
               <Input
                 id="my-input-0"
@@ -73,7 +74,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <FormControl style={{ width: '100%' }}>
+            <FormControl style={{ width: "100%" }}>
               <InputLabel htmlFor="my-input-2">O co chodzi</InputLabel>
               <Input
                 id="my-input-2"
@@ -82,8 +83,18 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
               />
             </FormControl>
           </Grid>
+          <Grid item xs={12}>
+            <FormControl style={{ width: "100%" }}>
+              <InputLabel htmlFor="my-input-6">Wizualizacja (link do obrazka)</InputLabel>
+              <Input
+                id="my-input-6"
+                value={visualization}
+                onChange={(ev) => setVisualization(ev.target.value)}
+              />
+            </FormControl>
+          </Grid>
           <Grid item xs={4}>
-            <FormControl style={{ width: '100%' }}>
+            <FormControl style={{ width: "100%" }}>
               <InputLabel htmlFor="my-input-3">Level 1</InputLabel>
               <Input
                 id="my-input-3"
@@ -93,7 +104,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
             </FormControl>
           </Grid>
           <Grid item xs={4}>
-            <FormControl style={{ width: '100%' }}>
+            <FormControl style={{ width: "100%" }}>
               <InputLabel htmlFor="my-input-4">Level 2</InputLabel>
               <Input
                 id="my-input-4"
@@ -103,7 +114,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
             </FormControl>
           </Grid>
           <Grid item xs={4}>
-            <FormControl style={{ width: '100%' }}>
+            <FormControl style={{ width: "100%" }}>
               <InputLabel htmlFor="my-input-5">Level 3</InputLabel>
               <Input
                 id="my-input-5"
@@ -114,7 +125,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
           </Grid>
           <Grid item xs={12}>
             <FormControl>
-              <InputLabel htmlFor="my-input-6">Progress</InputLabel>
+              <InputLabel htmlFor="my-input-6">Progres</InputLabel>
               <Input
                 id="my-input-6"
                 value={progress}
