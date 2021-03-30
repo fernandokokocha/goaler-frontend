@@ -12,6 +12,7 @@ import React, { useState } from "react";
 export const AddGoal = ({ addGoal }: { addGoal: any }) => {
   const [name, setName] = useState("");
   const [inspiration, setInspiration] = useState("");
+  const [link, setLink] = useState("");
   const [explanation, setExplanation] = useState("");
   const [level1, setLevel1] = useState(0);
   const [level2, setLevel2] = useState(0);
@@ -23,7 +24,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
       name,
       inspiration: {
         name: inspiration,
-        link: null,
+        link,
       },
       explanation,
       level1,
@@ -41,8 +42,8 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
 
       <Paper>
         <Grid container justify="flex-start" spacing={2}>
-          <Grid item xs={1}>
-            <FormControl>
+          <Grid item xs={12}>
+            <FormControl style={{ width: '100%' }}>
               <InputLabel htmlFor="my-input">Nazwa</InputLabel>
               <Input
                 id="my-input"
@@ -51,8 +52,8 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={3}>
-            <FormControl>
+          <Grid item xs={6}>
+            <FormControl style={{ width: '100%' }}>
               <InputLabel htmlFor="my-input-0">Inspiracja</InputLabel>
               <Input
                 id="my-input-0"
@@ -61,8 +62,18 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={4}>
-            <FormControl>
+          <Grid item xs={6}>
+            <FormControl style={{ width: '100%' }}>
+              <InputLabel htmlFor="my-input-0">Link (opcjonalny)</InputLabel>
+              <Input
+                id="my-input-0"
+                value={link}
+                onChange={(ev) => setLink(ev.target.value)}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl style={{ width: '100%' }}>
               <InputLabel htmlFor="my-input-2">O co chodzi</InputLabel>
               <Input
                 id="my-input-2"
@@ -71,8 +82,8 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={1}>
-            <FormControl>
+          <Grid item xs={4}>
+            <FormControl style={{ width: '100%' }}>
               <InputLabel htmlFor="my-input-3">Level 1</InputLabel>
               <Input
                 id="my-input-3"
@@ -81,8 +92,8 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={1}>
-            <FormControl>
+          <Grid item xs={4}>
+            <FormControl style={{ width: '100%' }}>
               <InputLabel htmlFor="my-input-4">Level 2</InputLabel>
               <Input
                 id="my-input-4"
@@ -91,8 +102,8 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={1}>
-            <FormControl>
+          <Grid item xs={4}>
+            <FormControl style={{ width: '100%' }}>
               <InputLabel htmlFor="my-input-5">Level 3</InputLabel>
               <Input
                 id="my-input-5"
@@ -101,7 +112,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
               />
             </FormControl>
           </Grid>
-          <Grid item xs={1}>
+          <Grid item xs={12}>
             <FormControl>
               <InputLabel htmlFor="my-input-6">Progress</InputLabel>
               <Input
@@ -112,7 +123,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
             </FormControl>
           </Grid>
 
-          <Grid item xs={2}>
+          <Grid item xs={12}>
             <Button variant="contained" color="primary" onClick={handleAddGoal}>
               Add!
             </Button>
