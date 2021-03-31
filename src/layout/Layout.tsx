@@ -19,6 +19,7 @@ import {
   List as ListIcon,
   Dashboard as DashboardIcon,
 } from "@material-ui/icons";
+import { Link, NavLink } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -160,19 +161,19 @@ export const Layout: FC = ({ children }) => {
         </div>
         <div className={classes.drawerContainer}>
           <List>
-            <ListItem button key="cards">
+            <ListItem button key="cards" component={Link} to="/cards">
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
               <ListItemText primary="Cards view" />
             </ListItem>
-            <ListItem button key="table">
+            <ListItem button key="table" component={Link} to="/table">
               <ListItemIcon>
                 <ListIcon />
               </ListItemIcon>
               <ListItemText primary="Table view" />
             </ListItem>
-            <ListItem button key="add">
+            <ListItem button key="add" component={Link} to="/add">
               <ListItemIcon>
                 <AddBoxIcon />
               </ListItemIcon>
