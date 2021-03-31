@@ -8,13 +8,17 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 import { Copyright } from "./Copyright";
+import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import {
+  AddBox as AddBoxIcon,
+  List as ListIcon,
+  Dashboard as DashboardIcon,
+} from "@material-ui/icons";
 
 const drawerWidth = 240;
 
@@ -31,6 +35,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "flex-end",
     padding: "0 8px",
     ...theme.mixins.toolbar,
+  },
+
+  drawerContainer: {
+    overflow: "auto",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -136,11 +144,6 @@ export const Layout: FC = ({ children }) => {
           >
             Goaler
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -154,6 +157,28 @@ export const Layout: FC = ({ children }) => {
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeftIcon />
           </IconButton>
+        </div>
+        <div className={classes.drawerContainer}>
+          <List>
+            <ListItem button key="cards">
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Cards view" />
+            </ListItem>
+            <ListItem button key="table">
+              <ListItemIcon>
+                <ListIcon />
+              </ListItemIcon>
+              <ListItemText primary="Table view" />
+            </ListItem>
+            <ListItem button key="add">
+              <ListItemIcon>
+                <AddBoxIcon />
+              </ListItemIcon>
+              <ListItemText primary="Add goal" />
+            </ListItem>
+          </List>
         </div>
       </Drawer>
       <main className={classes.content}>
