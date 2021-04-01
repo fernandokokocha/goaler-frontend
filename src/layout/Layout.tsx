@@ -161,17 +161,22 @@ export const Layout: FC = ({ children }) => {
         </div>
         <div className={classes.drawerContainer}>
           <List>
-            <ListItem button key="cards" component={Link} to="/cards">
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Cards view" />
-            </ListItem>
             <ListItem button key="table" component={Link} to="/table">
               <ListItemIcon>
                 <ListIcon />
               </ListItemIcon>
-              <ListItemText primary="Table view" />
+              <ListItemText primary="My goals" />
+            </ListItem>
+            <ListItem
+              button
+              key="visualization"
+              component={Link}
+              to="/visualization"
+            >
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Visualization" />
             </ListItem>
             <ListItem button key="add" component={Link} to="/add">
               <ListItemIcon>

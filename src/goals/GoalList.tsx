@@ -8,12 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { ProgressBar } from "react-bootstrap";
-
-type x = {
-  current: number;
-  max: number;
-  percent: number;
-};
+import { findCurrent, reached } from "./GoalModel";
 
 const useStyles = makeStyles({
   table: {
@@ -66,38 +61,6 @@ const CurrentTableCell = ({
 export const GoalList = ({ goals }: { goals: any }) => {
   const classes = useStyles();
 
-  const reached = (level: number, progress: number): boolean =>
-    progress >= level;
-
-  const calcPercent = (level: number, progress: number): number => {
-    const num = Math.floor((progress / level) * 100);
-    return Math.min(num, 100);
-  };
-
-  const findCurrent = (row: any): x => {
-    if (calcPercent(row.level1, row.progress) < 100) {
-      return {
-        current: row.progress,
-        max: row.level1,
-        percent: calcPercent(row.level1, row.progress),
-      };
-    }
-
-    if (calcPercent(row.level2, row.progress) < 100) {
-      return {
-        current: row.progress,
-        max: row.level2,
-        percent: calcPercent(row.level2, row.progress),
-      };
-    }
-
-    return {
-      current: row.progress,
-      max: row.level3,
-      percent: calcPercent(row.level3, row.progress),
-    };
-  };
-
   return (
     <TableContainer component={Paper}>
       <Table className={classes.table} aria-label="simple table" size="small">
@@ -107,7 +70,9 @@ export const GoalList = ({ goals }: { goals: any }) => {
             <TableCell align="right">Nazwa</TableCell>
             <TableCell align="right">Inspiracja</TableCell>
             <TableCell align="right">O co chodzi</TableCell>
-            <TableCell align="right" style={{ minWidth: 250 }}>Current</TableCell>
+            <TableCell align="right" style={{ minWidth: 250 }}>
+              Current
+            </TableCell>
             <TableCell align="right">Poziom 1</TableCell>
             <TableCell align="right">Poziom 2</TableCell>
             <TableCell align="right">Poziom 3</TableCell>

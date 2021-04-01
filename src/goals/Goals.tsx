@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AddGoal } from "./AddGoal";
 import { GoalList } from "./GoalList";
-import { GoalCards } from "./GoalCards";
+import { Visualization } from "./Visualization";
 import { Switch, Route } from "react-router-dom";
 
 const rows = [
@@ -85,8 +85,8 @@ export const Goals = () => {
 
   return (
     <Switch>
-      <Route path="/cards">
-        <GoalCards goals={goals} />
+      <Route path="/visualization">
+        <Visualization goals={goals} />
       </Route>
       <Route path="/table">
         <GoalList goals={goals} />
