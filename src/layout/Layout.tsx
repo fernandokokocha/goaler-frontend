@@ -13,13 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { Copyright } from "./Copyright";
-import { List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import {
-  AddBox as AddBoxIcon,
-  List as ListIcon,
-  Dashboard as DashboardIcon,
-} from "@material-ui/icons";
-import { Link, NavLink } from "react-router-dom";
+import { SideMenu } from "./SideMenu";
 
 const drawerWidth = 240;
 
@@ -160,31 +154,7 @@ export const Layout: FC = ({ children }) => {
           </IconButton>
         </div>
         <div className={classes.drawerContainer}>
-          <List>
-            <ListItem button key="table" component={Link} to="/table">
-              <ListItemIcon>
-                <ListIcon />
-              </ListItemIcon>
-              <ListItemText primary="My goals" />
-            </ListItem>
-            <ListItem
-              button
-              key="visualization"
-              component={Link}
-              to="/visualization"
-            >
-              <ListItemIcon>
-                <DashboardIcon />
-              </ListItemIcon>
-              <ListItemText primary="Visualization" />
-            </ListItem>
-            <ListItem button key="add" component={Link} to="/add">
-              <ListItemIcon>
-                <AddBoxIcon />
-              </ListItemIcon>
-              <ListItemText primary="Add goal" />
-            </ListItem>
-          </List>
+          <SideMenu />
         </div>
       </Drawer>
       <main className={classes.content}>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { AddGoal } from "./AddGoal";
 import { GoalList } from "./GoalList";
 import { Visualization } from "./Visualization";
+import { Breakdown } from "./Breakdown";
 import { Switch, Route } from "react-router-dom";
 
 const rows = [
@@ -93,6 +94,9 @@ export const Goals = () => {
       </Route>
       <Route path="/add">
         <AddGoal addGoal={addGoal} />
+      </Route>
+      <Route path="/breakdown">
+        <Breakdown goals={goals} />
       </Route>
       <Route path="/">
         <div>:)</div>
