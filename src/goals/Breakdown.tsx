@@ -8,6 +8,8 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { brown, grey, yellow } from "@material-ui/core/colors";
+import { DndProvider, useDrag } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,37 +57,63 @@ const LevelTableCell = ({
   );
 };
 
+const Draggable = ({
+  isDragging,
+  text,
+}: {
+  isDragging: boolean;
+  text: string;
+}) => {
+  const [{ opacity }, dragRef] = useDrag(
+    () => ({
+      type: "card",
+      item: { text },
+      collect: (monitor) => ({
+        opacity: monitor.isDragging() ? 0.5 : 1,
+      }),
+    }),
+    []
+  );
+  return (
+    <div ref={dragRef} style={{ opacity }}>
+      {text}
+    </div>
+  );
+};
+
 export const Breakdown = ({ goals }: { goals: any }) => {
   const classes = useStyles();
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table" size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>#</TableCell>
-            <TableCell align="right">Nazwa</TableCell>
-            <TableCell align="right">2021</TableCell>
-            <TableCell align="right">2022</TableCell>
-            <TableCell align="right">2023</TableCell>
-            <TableCell align="right">2024</TableCell>
-            <TableCell align="right">2025</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {goals.map((row: any, index: number) => (
-            <TableRow key={row.name}>
-              <TableCell align="right">{index + 1}</TableCell>
-              <TableCell align="right">{row.name}</TableCell>
-              <LevelTableCell level={1} value={row.level1} />
-              <LevelTableCell level={2} value={row.level2} />
-              <LevelTableCell level={3} value={row.level3} />
-              <TableCell align="right"></TableCell>
-              <TableCell align="right"></TableCell>
+    <DndProvider backend={HTML5Backend}>
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="simple table" size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell align="right">Nazwa</TableCell>
+              <TableCell align="right">2021</TableCell>
+              <TableCell align="right">2022</TableCell>
+              <TableCell align="right">2023</TableCell>
+              <TableCell align="right">2024</TableCell>
+              <TableCell align="right">2025</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {goals.map((row: any, index: number) => (
+              <TableRow key={row.name}>
+                <TableCell align="right">{index + 1}</TableCell>
+                <TableCell align="right">{row.name}</TableCell>
+                <LevelTableCell level={1} value={row.level1} />
+                <LevelTableCell level={2} value={row.level2} />
+                <LevelTableCell level={3} value={row.level3} />
+                <TableCell align="right"></TableCell>
+                <TableCell align="right"></TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </DndProvider>
   );
 };
