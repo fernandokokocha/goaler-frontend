@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,13 +8,19 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { brown, grey, yellow } from "@material-ui/core/colors";
-import { DndProvider, useDrag } from "react-dnd";
+import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { Draggable } from "./utils/Draggable";
+import Droppable from "./utils/Droppable";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     table: {
       minWidth: 650,
+    },
+    levelTableCell: {
+      padding: 0,
+      margin: 0,
     },
 
     brown: {
@@ -32,52 +38,42 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const LevelTableCell = ({
-  level,
-  value,
-}: {
-  level: 1 | 2 | 3;
-  value: number;
-}) => {
+const EmptyTableCell: FC<{ id: string }> = ({ id, children }) => {
   const classes = useStyles();
 
-  let className;
-  if (level === 1) {
-    className = classes.brown;
-  } else if (level === 2) {
-    className = classes.grey;
-  } else {
-    className = classes.yellow;
-  }
-
   return (
-    <TableCell align="right" className={className}>
-      {value}
+    <TableCell align="right" className={classes.levelTableCell}>
+      <Droppable id={id}>
+        {children}
+      </Droppable>
     </TableCell>
   );
 };
 
-const Draggable = ({
-  isDragging,
-  text,
-}: {
-  isDragging: boolean;
-  text: string;
+const LevelTableCell: FC<{ id: string; level: 1 | 2 | 3 }> = ({
+  id,
+  level,
+  children,
 }) => {
-  const [{ opacity }, dragRef] = useDrag(
-    () => ({
-      type: "card",
-      item: { text },
-      collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0.5 : 1,
-      }),
-    }),
-    []
-  );
+  const classes = useStyles();
+
+  let classNames = `${classes.levelTableCell} `;
+  if (level === 1) {
+    classNames += classes.brown;
+  } else if (level === 2) {
+    classNames += classes.grey;
+  } else {
+    classNames += classes.yellow;
+  }
+
   return (
-    <div ref={dragRef} style={{ opacity }}>
-      {text}
-    </div>
+    <TableCell align="right" className={classNames}>
+      <Draggable id={id}>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          {children}
+        </div>
+      </Draggable>
+    </TableCell>
   );
 };
 
@@ -104,11 +100,19 @@ export const Breakdown = ({ goals }: { goals: any }) => {
               <TableRow key={row.name}>
                 <TableCell align="right">{index + 1}</TableCell>
                 <TableCell align="right">{row.name}</TableCell>
-                <LevelTableCell level={1} value={row.level1} />
-                <LevelTableCell level={2} value={row.level2} />
-                <LevelTableCell level={3} value={row.level3} />
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
+
+                <LevelTableCell level={1} id={`${index}-1`}>
+                  {row.level1}
+                </LevelTableCell>
+                <LevelTableCell level={2} id={`${index}-2`}>
+                  {row.level2}
+                </LevelTableCell>
+                <LevelTableCell level={3} id={`${index}-3`}>
+                  {row.level3}
+                </LevelTableCell>
+
+                <EmptyTableCell id={`${index}-2024`}></EmptyTableCell>
+                <EmptyTableCell id={`${index}-2025`}></EmptyTableCell>
               </TableRow>
             ))}
           </TableBody>
