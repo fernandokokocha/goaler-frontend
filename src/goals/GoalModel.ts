@@ -1,9 +1,4 @@
-type CurrentLevel = {
-  level: 1 | 2 | 3;
-  current: number;
-  max: number;
-  percent: number;
-};
+import { CurrentLevel, Goal } from "./types"
 
 export const reached = (level: number, progress: number): boolean =>
   progress >= level;
@@ -13,7 +8,7 @@ export const calcPercent = (level: number, progress: number): number => {
   return Math.min(num, 100);
 };
 
-export const findCurrent = (row: any): CurrentLevel => {
+export const findCurrent = (row: Goal): CurrentLevel => {
   if (calcPercent(row.level1, row.progress) < 100) {
     return {
       level: 1,

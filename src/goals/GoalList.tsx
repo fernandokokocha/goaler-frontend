@@ -9,6 +9,7 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { ProgressBar } from "react-bootstrap";
 import { findCurrent, reached } from "./GoalModel";
+import { Goal } from "./types";
 
 const useStyles = makeStyles({
   table: {
@@ -58,7 +59,7 @@ const CurrentTableCell = ({
   );
 };
 
-export const GoalList = ({ goals }: { goals: any }) => {
+export const GoalList = ({ goals }: { goals: Goal[] }) => {
   const classes = useStyles();
 
   return (
@@ -79,7 +80,7 @@ export const GoalList = ({ goals }: { goals: any }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {goals.map((row: any, index: number) => (
+          {goals.map((row: Goal, index: number) => (
             <TableRow key={row.name}>
               <TableCell align="right">{index + 1}</TableCell>
               <TableCell align="right">{row.name}</TableCell>

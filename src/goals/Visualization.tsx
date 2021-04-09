@@ -9,6 +9,7 @@ import InfoIcon from "@material-ui/icons/Info";
 import { Avatar, Tooltip } from "@material-ui/core";
 import { brown, grey, yellow } from "@material-ui/core/colors";
 import { findCurrent } from "./GoalModel";
+import { Goal } from "./types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -59,7 +60,7 @@ const LevelBadge = ({ level }: { level: 1 | 2 | 3 }) => {
   );
 };
 
-export const Visualization = ({ goals }: { goals: any }) => {
+export const Visualization = ({ goals }: { goals: Goal[] }) => {
   const classes = useStyles();
 
   return (
@@ -68,7 +69,7 @@ export const Visualization = ({ goals }: { goals: any }) => {
         <GridListTile key="Subheader" cols={2} style={{ height: "auto" }}>
           <ListSubheader>Visualization</ListSubheader>
         </GridListTile>
-        {goals.map((goal: any) => (
+        {goals.map((goal: Goal) => (
           <GridListTile key={goal.visualization}>
             <img
               src={goal.visualization}

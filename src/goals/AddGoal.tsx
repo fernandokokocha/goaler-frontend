@@ -8,8 +8,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import { Goal } from "./types";
 
-export const AddGoal = ({ addGoal }: { addGoal: any }) => {
+export const AddGoal = ({ addGoal }: { addGoal: (goal: Goal) => void }) => {
   const [name, setName] = useState("");
   const [inspiration, setInspiration] = useState("");
   const [link, setLink] = useState("");
@@ -32,6 +33,7 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
       level2,
       level3,
       progress,
+      visualization
     });
   };
 
@@ -85,7 +87,9 @@ export const AddGoal = ({ addGoal }: { addGoal: any }) => {
           </Grid>
           <Grid item xs={12}>
             <FormControl style={{ width: "100%" }}>
-              <InputLabel htmlFor="my-input-6">Wizualizacja (link do obrazka)</InputLabel>
+              <InputLabel htmlFor="my-input-6">
+                Wizualizacja (link do obrazka)
+              </InputLabel>
               <Input
                 id="my-input-6"
                 value={visualization}
