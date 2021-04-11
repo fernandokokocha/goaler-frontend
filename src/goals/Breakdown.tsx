@@ -14,12 +14,6 @@ import { EmptyTableCell } from "./Breakdown/EmptyTableCell";
 import { Goal } from "./types";
 import { DndLevel } from "./Breakdown/dndLevel";
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
-
 type Level = 1 | 2 | 3;
 
 type Tile = {
@@ -40,8 +34,6 @@ type Breakdown = {
 type Timeslot = keyof typeof Breakdown;
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
-  const classes = useStyles();
-
   const timeSlots = ["2021", "2022", "2023", "2024", "2025", "2026"];
 
   const getInitialBreakdowns = (): Breakdown[] => {
@@ -102,7 +94,7 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
   return (
     <DndProvider backend={HTML5Backend}>
       <TableContainer component={Paper}>
-        <Table className={classes.table} aria-label="simple table" size="small">
+        <Table aria-label="simple table" size="small">
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
