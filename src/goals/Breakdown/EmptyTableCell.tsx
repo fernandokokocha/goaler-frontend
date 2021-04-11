@@ -1,13 +1,9 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import { useDrop } from "react-dnd";
 import { ItemTypes } from "./types";
-import { DndLevel } from "./dndLevel";
+import { DndLevel } from "./types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

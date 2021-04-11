@@ -1,5 +1,4 @@
 import React, { FC, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -12,7 +11,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { LevelTableCell } from "./Breakdown/LevelTableCell";
 import { EmptyTableCell } from "./Breakdown/EmptyTableCell";
 import { Goal } from "./types";
-import { DndLevel } from "./Breakdown/dndLevel";
+import { DndLevel } from "./Breakdown/types";
 
 type Level = 1 | 2 | 3;
 

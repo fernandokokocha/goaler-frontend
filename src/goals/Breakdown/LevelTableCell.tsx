@@ -4,7 +4,7 @@ import TableCell from "@material-ui/core/TableCell";
 import { brown, grey, yellow } from "@material-ui/core/colors";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./types";
-import { DndLevel } from "./dndLevel";
+import { DndLevel } from "./types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
