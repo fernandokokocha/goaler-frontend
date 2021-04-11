@@ -4,6 +4,7 @@ import TableCell from "@material-ui/core/TableCell";
 import { brown, grey, yellow } from "@material-ui/core/colors";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./types";
+import { DndLevel } from "./dndLevel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,15 +27,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Draggable: FC<{ index: number; level: 1 | 2 | 3 }> = ({
-  index,
-  level,
-  children,
-}) => {
+const Draggable: FC<{
+  index: number;
+  level: 1 | 2 | 3;
+  value: number;
+  time: string;
+}> = ({ index, level, value, time }) => {
+  const dndItem: DndLevel = { index, level, value, time };
   const [{ opacity }, dragRef] = useDrag(
     () => ({
       type: ItemTypes.LEVEL,
-      item: { index, level },
+      item: dndItem,
       collect: (monitor) => ({
         opacity: monitor.isDragging() ? 0.5 : 1,
       }),
@@ -43,16 +46,17 @@ const Draggable: FC<{ index: number; level: 1 | 2 | 3 }> = ({
   );
   return (
     <div ref={dragRef} style={{ opacity }}>
-      {children}
+      <div style={{ display: "flex", justifyContent: "center" }}>{value}</div>
     </div>
   );
 };
 
-export const LevelTableCell: FC<{ index: number; level: 1 | 2 | 3 }> = ({
-  index,
-  level,
-  children,
-}) => {
+export const LevelTableCell: FC<{
+  index: number;
+  level: 1 | 2 | 3;
+  value: number;
+  time: string;
+}> = ({ index, level, value, time }) => {
   const classes = useStyles();
 
   let classNames = `${classes.levelTableCell} `;
@@ -66,11 +70,7 @@ export const LevelTableCell: FC<{ index: number; level: 1 | 2 | 3 }> = ({
 
   return (
     <TableCell align="right" className={classNames}>
-      <Draggable index={index} level={level}>
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          {children}
-        </div>
-      </Draggable>
+      <Draggable index={index} level={level} value={value} time={time} />
     </TableCell>
   );
 };

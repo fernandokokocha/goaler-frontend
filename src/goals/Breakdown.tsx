@@ -12,6 +12,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { LevelTableCell } from "./Breakdown/LevelTableCell";
 import { EmptyTableCell } from "./Breakdown/EmptyTableCell";
 import { Goal } from "./types";
+import { DndLevel } from "./Breakdown/dndLevel";
 
 const useStyles = makeStyles({
   table: {
@@ -57,6 +58,20 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
 
   const initialBreakdowns: Breakdown[] = getInitialBreakdowns();
 
+  const [breakdowns, setBreakdowns] = useState(initialBreakdowns);
+
+  const handleDrop = (
+    newTime: string,
+    { index, level, value, time }: DndLevel
+  ) => {
+    const x = time as Timeslot;
+    const newX = newTime as Timeslot;
+    const newBreakdowns = [...breakdowns];
+    (newBreakdowns[index][x] as any) = null;
+    (newBreakdowns[index][newX] as any) = { level, value };
+    setBreakdowns(newBreakdowns);
+  };
+
   const renderTimeSlot = (
     timeSlot: string,
     breakdown: Breakdown,
@@ -65,12 +80,15 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     const x = timeSlot as Timeslot;
     if (breakdown[x])
       return (
-        <LevelTableCell level={(breakdown[x] as Tile).level} index={index}>
-          {(breakdown[x] as Tile).value}
-        </LevelTableCell>
+        <LevelTableCell
+          index={index}
+          level={(breakdown[x] as Tile).level}
+          value={(breakdown[x] as Tile).value}
+          time={timeSlot}
+        />
       );
 
-    return <EmptyTableCell index={index} time={timeSlot} />;
+    return <EmptyTableCell index={index} time={timeSlot} onDrop={handleDrop} />;
   };
 
   const renderGoalRow = (breakdown: Breakdown, index: number) => (
@@ -94,7 +112,7 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>{initialBreakdowns.map(renderGoalRow)}</TableBody>
+          <TableBody>{breakdowns.map(renderGoalRow)}</TableBody>
         </Table>
       </TableContainer>
     </DndProvider>

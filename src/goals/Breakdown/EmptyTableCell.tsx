@@ -7,6 +7,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import { useDrop } from "react-dnd";
 import { ItemTypes } from "./types";
+import { DndLevel } from "./dndLevel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,27 +18,23 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const Droppable: FC<{ time: string; index: number }> = ({
-  time,
-  index,
-}) => {
+export const Droppable: FC<{
+  time: string;
+  index: number;
+  onDrop: (time: string, item: DndLevel) => void;
+}> = ({ time, index, onDrop }) => {
   const canDropItem = (monitor: any) => {
     return monitor.canDrop() && index === (monitor.getItem() as any).index;
   };
 
   const [{ canDrop, hover }, drop] = useDrop(() => ({
     accept: ItemTypes.LEVEL,
-    drop: (item) => handleDrop(item),
+    drop: (item: DndLevel) => onDrop(time, item),
     collect: (monitor) => ({
       canDrop: canDropItem(monitor),
       hover: canDropItem(monitor) && monitor.isOver(),
     }),
   }));
-
-  const handleDrop = (item: any) => {
-    if (item.index != index) return;
-    console.log(`dropped! Index ${index}, time ${time}, level ${item.level}`);
-  };
 
   let style = {};
 
@@ -75,15 +72,16 @@ export const Droppable: FC<{ time: string; index: number }> = ({
   );
 };
 
-export const EmptyTableCell: FC<{ time: string; index: number }> = ({
-  time,
-  index,
-}) => {
+export const EmptyTableCell: FC<{
+  time: string;
+  index: number;
+  onDrop: (time: string, item: DndLevel) => void;
+}> = ({ time, index, onDrop }) => {
   const classes = useStyles();
 
   return (
     <TableCell align="right" className={classes.levelTableCell}>
-      <Droppable index={index} time={time} />
+      <Droppable index={index} time={time} onDrop={onDrop} />
     </TableCell>
   );
 };
