@@ -20,7 +20,12 @@ export const Droppable: FC<{
   onDrop: (time: string, item: DndLevel) => void;
 }> = ({ time, index, onDrop }) => {
   const canDropItem = (monitor: any) => {
-    return monitor.canDrop() && index === (monitor.getItem() as any).index;
+    if (!monitor.canDrop()) return false;
+
+    const item = monitor.getItem() as DndLevel;
+    const isLevelEqual = index === item.index;
+
+    return isLevelEqual;
   };
 
   const [{ canDrop, hover }, drop] = useDrop(() => ({
@@ -32,31 +37,17 @@ export const Droppable: FC<{
     }),
   }));
 
-  let style = {};
+  let style: any = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "50px",
+  };
 
   if (hover) {
-    style = {
-      height: "50px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "green",
-    };
+    style.backgroundColor = "green";
   } else if (canDrop) {
-    style = {
-      height: "50px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "red",
-    };
-  } else {
-    style = {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "50px",
-    };
+    style.backgroundColor = "red";
   }
 
   const textToRender = canDrop ? time : "";

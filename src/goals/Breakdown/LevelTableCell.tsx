@@ -34,16 +34,19 @@ const Draggable: FC<{
   time: string;
 }> = ({ index, level, value, time }) => {
   const dndItem: DndLevel = { index, level, value, time };
-  const [{ opacity }, dragRef] = useDrag(
+  const [{ isDragging }, dragRef] = useDrag(
     () => ({
       type: ItemTypes.LEVEL,
       item: dndItem,
       collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0.5 : 1,
+        isDragging: monitor.isDragging(),
       }),
     }),
     []
   );
+
+  const opacity = isDragging ? 0.5 : 1;
+
   return (
     <div ref={dragRef} style={{ opacity }}>
       <div style={{ display: "flex", justifyContent: "center" }}>{value}</div>

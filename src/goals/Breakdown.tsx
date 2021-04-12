@@ -28,14 +28,25 @@ type Breakdown = {
   "2024": Tile | null;
   "2025": Tile | null;
   "2026": Tile | null;
+  "2027": Tile | null;
+  "2028": Tile | null;
 };
 
 type Timeslot = keyof typeof Breakdown;
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
-  const timeSlots = ["2021", "2022", "2023", "2024", "2025", "2026"];
+  const timeSlots = [
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025",
+    "2026",
+    "2027",
+    "2028",
+  ];
 
-  const getInitialBreakdowns = (): Breakdown[] => {
+  const getInitialBreakdowns = (goals: Goal[]): Breakdown[] => {
     return goals.map((goal: Goal) => ({
       name: goal.name,
       "2021": { level: 1, value: goal.level1 },
@@ -44,10 +55,12 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
       "2024": null,
       "2025": null,
       "2026": null,
+      "2027": null,
+      "2028": null,
     }));
   };
 
-  const initialBreakdowns: Breakdown[] = getInitialBreakdowns();
+  const initialBreakdowns: Breakdown[] = getInitialBreakdowns(goals);
 
   const [breakdowns, setBreakdowns] = useState(initialBreakdowns);
 
@@ -97,9 +110,9 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
-              <TableCell align="right">Nazwa</TableCell>
+              <TableCell align="center">Nazwa</TableCell>
               {timeSlots.map((timeSlot) => (
-                <TableCell align="right">{timeSlot}</TableCell>
+                <TableCell align="center">{timeSlot}</TableCell>
               ))}
             </TableRow>
           </TableHead>

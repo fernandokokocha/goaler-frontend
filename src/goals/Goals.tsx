@@ -4,8 +4,9 @@ import { GoalList } from "./GoalList";
 import { Visualization } from "./Visualization";
 import { Breakdown } from "./Breakdown";
 import { Switch, Route } from "react-router-dom";
+import { Goal } from "./types";
 
-const rows = [
+const rows: Goal[] = [
   {
     name: "Video is king",
     inspiration: {
@@ -79,7 +80,7 @@ const rows = [
 export const Goals = () => {
   const [goals, setGoals] = useState(rows);
 
-  const addGoal = (goal: any) => {
+  const addGoal = (goal: Goal) => {
     const newGoals = [...goals, goal];
     setGoals(newGoals);
   };
