@@ -15,27 +15,49 @@ import { DndLevel } from "./Breakdown/types";
 
 type Level = 1 | 2 | 3;
 
-type Tile = {
-  level: Level;
-  value: number;
+type Timeslot =
+  | "2021"
+  | "2022"
+  | "2023"
+  | "2024"
+  | "2025"
+  | "2026"
+  | "2027"
+  | "2028";
+
+type ProgressSlot = {
+  when: Timeslot;
+  what: number | null;
+  level?: Level;
 };
 
-type Breakdown = {
-  name: string;
-  "2021": Tile | null;
-  "2022": Tile | null;
-  "2023": Tile | null;
-  "2024": Tile | null;
-  "2025": Tile | null;
-  "2026": Tile | null;
-  "2027": Tile | null;
-  "2028": Tile | null;
+type GoalBrokenDown = {
+  goal: Goal;
+  progressLine: ProgressSlot[];
 };
-
-type Timeslot = keyof typeof Breakdown;
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
-  const timeSlots = [
+  const getInitialBreakdowns = (goals: Goal[]): GoalBrokenDown[] => {
+    return goals.map((goal: Goal) => ({
+      goal: goal,
+      progressLine: [
+        { when: "2021", what: goal.level1, level: 1 },
+        { when: "2022", what: goal.level2, level: 2 },
+        { when: "2023", what: goal.level3, level: 3 },
+        { when: "2024", what: null },
+        { when: "2025", what: null },
+        { when: "2026", what: null },
+        { when: "2027", what: null },
+        { when: "2028", what: null },
+      ],
+    }));
+  };
+
+  const x: GoalBrokenDown[] = getInitialBreakdowns(goals);
+
+  const [goalsBrokenDown, setGoalsBrokenDown] = useState(x);
+
+  const columns: Timeslot[] = [
     "2021",
     "2022",
     "2023",
@@ -46,60 +68,55 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     "2028",
   ];
 
-  const getInitialBreakdowns = (goals: Goal[]): Breakdown[] => {
-    return goals.map((goal: Goal) => ({
-      name: goal.name,
-      "2021": { level: 1, value: goal.level1 },
-      "2022": { level: 2, value: goal.level2 },
-      "2023": { level: 3, value: goal.level3 },
-      "2024": null,
-      "2025": null,
-      "2026": null,
-      "2027": null,
-      "2028": null,
-    }));
-  };
-
-  const initialBreakdowns: Breakdown[] = getInitialBreakdowns(goals);
-
-  const [breakdowns, setBreakdowns] = useState(initialBreakdowns);
-
   const handleDrop = (
     newTime: string,
-    { index, level, value, time }: DndLevel
+    { index, level, value, time: oldTime }: DndLevel
   ) => {
-    const x = time as Timeslot;
-    const newX = newTime as Timeslot;
-    const newBreakdowns = [...breakdowns];
-    (newBreakdowns[index][x] as any) = null;
-    (newBreakdowns[index][newX] as any) = { level, value };
-    setBreakdowns(newBreakdowns);
+    const newGoalsBrokenDown: GoalBrokenDown[] = [...goalsBrokenDown];
+    const changedGoal: GoalBrokenDown = newGoalsBrokenDown[index];
+
+    const oldProgressSlot = changedGoal.progressLine.find(
+      ({ when }) => when === oldTime
+    ) as ProgressSlot;
+    oldProgressSlot.what = null;
+    oldProgressSlot.level = undefined;
+
+    const newProgressSlot = changedGoal.progressLine.find(
+      ({ when }) => when === newTime
+    ) as ProgressSlot;
+    newProgressSlot.what = value;
+    newProgressSlot.level = level;
+
+    setGoalsBrokenDown(newGoalsBrokenDown);
   };
 
-  const renderTimeSlot = (
-    timeSlot: string,
-    breakdown: Breakdown,
-    index: number
-  ) => {
-    const x = timeSlot as Timeslot;
-    if (breakdown[x])
+  const renderTimeSlot = (progressSlot: ProgressSlot, index: number) => {
+    if (progressSlot.what)
       return (
         <LevelTableCell
           index={index}
-          level={(breakdown[x] as Tile).level}
-          value={(breakdown[x] as Tile).value}
-          time={timeSlot}
+          level={progressSlot.level as Level}
+          value={progressSlot.what}
+          time={progressSlot.when}
         />
       );
 
-    return <EmptyTableCell index={index} time={timeSlot} onDrop={handleDrop} />;
+    return (
+      <EmptyTableCell
+        index={index}
+        time={progressSlot.when}
+        onDrop={handleDrop}
+      />
+    );
   };
 
-  const renderGoalRow = (breakdown: Breakdown, index: number) => (
-    <TableRow key={breakdown.name}>
+  const renderGoalRow = (goalBrokenDown: GoalBrokenDown, index: number) => (
+    <TableRow key={index}>
       <TableCell align="right">{index + 1}</TableCell>
-      <TableCell align="right">{breakdown.name}</TableCell>
-      {timeSlots.map((timeslot) => renderTimeSlot(timeslot, breakdown, index))}
+      <TableCell align="right">{goalBrokenDown.goal.name}</TableCell>
+      {goalBrokenDown.progressLine.map((progressSlot: ProgressSlot) =>
+        renderTimeSlot(progressSlot, index)
+      )}
     </TableRow>
   );
 
@@ -111,12 +128,12 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell align="center">Nazwa</TableCell>
-              {timeSlots.map((timeSlot) => (
-                <TableCell align="center">{timeSlot}</TableCell>
+              {columns.map((column) => (
+                <TableCell align="center">{column}</TableCell>
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>{breakdowns.map(renderGoalRow)}</TableBody>
+          <TableBody>{goalsBrokenDown.map(renderGoalRow)}</TableBody>
         </Table>
       </TableContainer>
     </DndProvider>
