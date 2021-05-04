@@ -2,8 +2,8 @@ import React, { FC } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import { useDrop } from "react-dnd";
-import { ItemTypes } from "./types";
-import { DndLevel } from "./types";
+import { DndLevel, ItemTypes } from "./types";
+import { Timeslot } from "../types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -13,6 +13,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
+
+const includes = (
+  timeslot: Timeslot,
+  lowerbound: Timeslot,
+  upperbound: Timeslot
+) => {
+  const isHigherThanLowerbound = Number(timeslot) >= Number(lowerbound);
+  const isLowerThanUpperbound = Number(timeslot) <= Number(upperbound);
+
+  return isHigherThanLowerbound && isLowerThanUpperbound;
+};
 
 export const Droppable: FC<{
   time: string;
@@ -25,7 +36,7 @@ export const Droppable: FC<{
     const item = monitor.getItem() as DndLevel;
     const isLevelEqual = index === item.index;
 
-    return isLevelEqual;
+    return isLevelEqual && includes(time as Timeslot, item.lowerbound, item.upperbound);
   };
 
   const [{ canDrop, hover }, drop] = useDrop(() => ({

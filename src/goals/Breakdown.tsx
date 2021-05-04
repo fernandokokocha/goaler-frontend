@@ -10,31 +10,8 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { LevelTableCell } from "./Breakdown/LevelTableCell";
 import { EmptyTableCell } from "./Breakdown/EmptyTableCell";
-import { Goal } from "./types";
+import { Goal, GoalBrokenDown, ProgressSlot, Timeslot, Level } from "./types";
 import { DndLevel } from "./Breakdown/types";
-
-type Level = 1 | 2 | 3;
-
-type Timeslot =
-  | "2021"
-  | "2022"
-  | "2023"
-  | "2024"
-  | "2025"
-  | "2026"
-  | "2027"
-  | "2028";
-
-type ProgressSlot = {
-  when: Timeslot;
-  what: number | null;
-  level?: Level;
-};
-
-type GoalBrokenDown = {
-  goal: Goal;
-  progressLine: ProgressSlot[];
-};
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
   const getInitialBreakdowns = (goals: Goal[]): GoalBrokenDown[] => {
@@ -90,7 +67,7 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     setGoalsBrokenDown(newGoalsBrokenDown);
   };
 
-  const renderTimeSlot = (progressSlot: ProgressSlot, index: number) => {
+  const renderTimeSlot = (progressSlot: ProgressSlot, index: number, lowerbound: Timeslot, upperbound: Timeslot) => {
     if (progressSlot.what)
       return (
         <LevelTableCell
@@ -98,6 +75,8 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
           level={progressSlot.level as Level}
           value={progressSlot.what}
           time={progressSlot.when}
+          upperbound={upperbound}
+          lowerbound={lowerbound}
         />
       );
 
@@ -115,7 +94,7 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
       <TableCell align="right">{index + 1}</TableCell>
       <TableCell align="right">{goalBrokenDown.goal.name}</TableCell>
       {goalBrokenDown.progressLine.map((progressSlot: ProgressSlot) =>
-        renderTimeSlot(progressSlot, index)
+        renderTimeSlot(progressSlot, index, '2021', '2026')
       )}
     </TableRow>
   );

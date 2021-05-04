@@ -5,6 +5,7 @@ import { brown, grey, yellow } from "@material-ui/core/colors";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./types";
 import { DndLevel } from "./types";
+import { Timeslot } from "../types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,8 +33,17 @@ const Draggable: FC<{
   level: 1 | 2 | 3;
   value: number;
   time: string;
-}> = ({ index, level, value, time }) => {
-  const dndItem: DndLevel = { index, level, value, time };
+  upperbound: Timeslot;
+  lowerbound: Timeslot;
+}> = ({ index, level, value, time, upperbound, lowerbound }) => {
+  const dndItem: DndLevel = {
+    index,
+    level,
+    value,
+    time,
+    upperbound,
+    lowerbound,
+  };
   const [{ isDragging }, dragRef] = useDrag(
     () => ({
       type: ItemTypes.LEVEL,
@@ -59,7 +69,9 @@ export const LevelTableCell: FC<{
   level: 1 | 2 | 3;
   value: number;
   time: string;
-}> = ({ index, level, value, time }) => {
+  upperbound: Timeslot;
+  lowerbound: Timeslot;
+}> = ({ index, level, value, time, upperbound, lowerbound }) => {
   const classes = useStyles();
 
   let classNames = `${classes.levelTableCell} `;
@@ -73,7 +85,14 @@ export const LevelTableCell: FC<{
 
   return (
     <TableCell align="right" className={classNames}>
-      <Draggable index={index} level={level} value={value} time={time} />
+      <Draggable
+        index={index}
+        level={level}
+        value={value}
+        time={time}
+        upperbound={upperbound}
+        lowerbound={lowerbound}
+      />
     </TableCell>
   );
 };
