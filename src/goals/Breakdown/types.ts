@@ -9,6 +9,7 @@ export type DndLevel = {
   level: 1 | 2 | 3;
   value: number;
   time: string;
-  upperbound: Timeslot;
-  lowerbound: Timeslot;
+  level1when: Timeslot;
+  level2when: Timeslot;
+  level3when: Timeslot;
 };

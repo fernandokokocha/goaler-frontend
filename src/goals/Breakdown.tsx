@@ -23,8 +23,9 @@ import { DndLevel } from "./Breakdown/types";
 type X = {
   progressSlot: ProgressSlot;
   index: number;
-  lowerbound: Timeslot;
-  upperbound: Timeslot;
+  level1when: Timeslot;
+  level2when: Timeslot;
+  level3when: Timeslot;
 };
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
@@ -99,7 +100,13 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
   };
 
   const renderTimeSlot = (something: X, key: number) => {
-    const { progressSlot, index, lowerbound, upperbound } = something;
+    const {
+      progressSlot,
+      index,
+      level1when,
+      level2when,
+      level3when,
+    } = something;
 
     if (progressSlot.what)
       return (
@@ -109,8 +116,9 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
           level={progressSlot.level as Level}
           value={progressSlot.what}
           time={progressSlot.when}
-          upperbound={upperbound}
-          lowerbound={lowerbound}
+          level1when={level1when}
+          level2when={level2when}
+          level3when={level3when}
         />
       );
 
@@ -124,20 +132,24 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     );
   };
 
-  const generateTimeslots = (
-    progressLine: ProgressSlot[],
-    index: number
-  ): X[] => {
+  const generateTimeslots = (goal: GoalBrokenDown, index: number): X[] => {
     let ret: X[] = [];
 
-    let lowerbound = "2021" as Timeslot;
-    let upperbound = "2028" as Timeslot;
+    const { progressLine } = goal;
+
     for (let i = 0; i < progressLine.length; i += 1) {
       const progressSlot: ProgressSlot = progressLine[i];
-      ret.push({ progressSlot, index, lowerbound, upperbound });
-      if (progressSlot.level) {
-        lowerbound = progressSlot.when;
-      }
+
+      const level1 = goal.progressLine.find(({ level }) => level == 1);
+      const level1when: Timeslot = level1 ? level1.when : "2021";
+
+      const level2 = goal.progressLine.find(({ level }) => level == 2);
+      const level2when: Timeslot = level2 ? level2.when : "2021";
+
+      const level3 = goal.progressLine.find(({ level }) => level == 3);
+      const level3when: Timeslot = level3 ? level3.when : "2021";
+
+      ret.push({ progressSlot, index, level1when, level2when, level3when });
     }
     return ret;
   };
@@ -146,9 +158,7 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     <TableRow key={index}>
       <TableCell align="right">{index + 1}</TableCell>
       <TableCell align="right">{goalBrokenDown.goal.name}</TableCell>
-      {generateTimeslots(goalBrokenDown.progressLine, index).map(
-        renderTimeSlot
-      )}
+      {generateTimeslots(goalBrokenDown, index).map(renderTimeSlot)}
     </TableRow>
   );
 

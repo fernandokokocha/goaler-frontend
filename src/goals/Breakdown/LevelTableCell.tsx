@@ -33,16 +33,18 @@ const Draggable: FC<{
   level: 1 | 2 | 3;
   value: number;
   time: string;
-  upperbound: Timeslot;
-  lowerbound: Timeslot;
-}> = ({ index, level, value, time, upperbound, lowerbound }) => {
+  level1when: Timeslot;
+  level2when: Timeslot;
+  level3when: Timeslot;
+}> = ({ index, level, value, time, level1when, level2when, level3when }) => {
   const dndItem: DndLevel = {
     index,
     level,
     value,
     time,
-    upperbound,
-    lowerbound,
+    level1when,
+    level2when,
+    level3when,
   };
   const [{ isDragging }, dragRef] = useDrag(
     () => ({
@@ -69,9 +71,10 @@ export const LevelTableCell: FC<{
   level: 1 | 2 | 3;
   value: number;
   time: string;
-  upperbound: Timeslot;
-  lowerbound: Timeslot;
-}> = ({ index, level, value, time, upperbound, lowerbound }) => {
+  level1when: Timeslot;
+  level2when: Timeslot;
+  level3when: Timeslot;
+}> = ({ index, level, value, time, level1when, level2when, level3when }) => {
   const classes = useStyles();
 
   let classNames = `${classes.levelTableCell} `;
@@ -90,8 +93,9 @@ export const LevelTableCell: FC<{
         level={level}
         value={value}
         time={time}
-        upperbound={upperbound}
-        lowerbound={lowerbound}
+        level1when={level1when}
+        level2when={level2when}
+        level3when={level3when}
       />
     </TableCell>
   );
