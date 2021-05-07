@@ -19,9 +19,15 @@ const includes = (
   lowerbound: Timeslot,
   upperbound: Timeslot
 ) => {
-  const isHigherThanLowerbound = Number(timeslot) >= Number(lowerbound);
-  const isLowerThanUpperbound = Number(timeslot) <= Number(upperbound);
+  const isHigherThanLowerbound = Number(timeslot) > Number(lowerbound);
+  const isLowerThanUpperbound = Number(timeslot) < Number(upperbound);
 
+  console.log(
+    "includes",
+    { timeslot, lowerbound, upperbound },
+    "returning",
+    isHigherThanLowerbound && isLowerThanUpperbound
+  );
   return isHigherThanLowerbound && isLowerThanUpperbound;
 };
 
@@ -36,7 +42,10 @@ export const Droppable: FC<{
     const item = monitor.getItem() as DndLevel;
     const isLevelEqual = index === item.index;
 
-    return isLevelEqual && includes(time as Timeslot, item.lowerbound, item.upperbound);
+    return (
+      isLevelEqual &&
+      includes(time as Timeslot, item.lowerbound, item.upperbound)
+    );
   };
 
   const [{ canDrop, hover }, drop] = useDrop(() => ({

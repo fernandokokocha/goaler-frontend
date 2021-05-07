@@ -43,3 +43,10 @@ export type GoalBrokenDown = {
   goal: Goal;
   progressLine: ProgressSlot[];
 };
+
+export type Milestones = {
+  goal: Goal;
+  level1: Timeslot;
+  level2: Timeslot;
+  level3: Timeslot;
+};

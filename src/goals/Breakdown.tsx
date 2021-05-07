@@ -10,30 +10,24 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { LevelTableCell } from "./Breakdown/LevelTableCell";
 import { EmptyTableCell } from "./Breakdown/EmptyTableCell";
-import { Goal, GoalBrokenDown, ProgressSlot, Timeslot, Level } from "./types";
+import {
+  Goal,
+  GoalBrokenDown,
+  ProgressSlot,
+  Timeslot,
+  Level,
+  Milestones,
+} from "./types";
 import { DndLevel } from "./Breakdown/types";
 
+type X = {
+  progressSlot: ProgressSlot;
+  index: number;
+  lowerbound: Timeslot;
+  upperbound: Timeslot;
+};
+
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
-  const getInitialBreakdowns = (goals: Goal[]): GoalBrokenDown[] => {
-    return goals.map((goal: Goal) => ({
-      goal: goal,
-      progressLine: [
-        { when: "2021", what: goal.level1, level: 1 },
-        { when: "2022", what: goal.level2, level: 2 },
-        { when: "2023", what: goal.level3, level: 3 },
-        { when: "2024", what: null },
-        { when: "2025", what: null },
-        { when: "2026", what: null },
-        { when: "2027", what: null },
-        { when: "2028", what: null },
-      ],
-    }));
-  };
-
-  const x: GoalBrokenDown[] = getInitialBreakdowns(goals);
-
-  const [goalsBrokenDown, setGoalsBrokenDown] = useState(x);
-
   const columns: Timeslot[] = [
     "2021",
     "2022",
@@ -45,32 +39,72 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     "2028",
   ];
 
+  const getInitialMilestones = (goals: Goal[]): Milestones[] => {
+    return goals.map((goal: Goal) => ({
+      goal: goal,
+      level1: "2021",
+      level2: "2022",
+      level3: "2023",
+    }));
+  };
+
+  const getBreakdowns = (milestones: Milestones[]): GoalBrokenDown[] => {
+    return milestones.map((milestone: Milestones) => {
+      const { goal } = milestone;
+      const progressLine: ProgressSlot[] = [
+        { when: milestone.level1, what: goal.level1, level: 1 },
+        { when: milestone.level2, what: goal.level2, level: 2 },
+        { when: milestone.level3, what: goal.level3, level: 3 },
+      ];
+
+      columns.forEach((column) => {
+        const found = progressLine.find(({ when }) => when === column);
+        if (!found) {
+          progressLine.push({ when: column, what: null });
+        }
+      });
+
+      const sortedProgressLine: ProgressSlot[] = progressLine.sort(
+        (a, b) => Number(a.when) - Number(b.when)
+      );
+
+      return { goal, progressLine: sortedProgressLine };
+    });
+  };
+
+  const initialMilestones: Milestones[] = getInitialMilestones(goals);
+
+  const [milestones, setMilestones] = useState(initialMilestones);
+
+  const goalsBrokenDown = getBreakdowns(milestones);
+
   const handleDrop = (
     newTime: string,
     { index, level, value, time: oldTime }: DndLevel
   ) => {
-    const newGoalsBrokenDown: GoalBrokenDown[] = [...goalsBrokenDown];
-    const changedGoal: GoalBrokenDown = newGoalsBrokenDown[index];
+    console.log("Dropped!", { index, level, value, time: oldTime, newTime });
 
-    const oldProgressSlot = changedGoal.progressLine.find(
-      ({ when }) => when === oldTime
-    ) as ProgressSlot;
-    oldProgressSlot.what = null;
-    oldProgressSlot.level = undefined;
+    const newMilestones: Milestones[] = [...milestones];
+    const changedMilestones: Milestones = newMilestones[index];
 
-    const newProgressSlot = changedGoal.progressLine.find(
-      ({ when }) => when === newTime
-    ) as ProgressSlot;
-    newProgressSlot.what = value;
-    newProgressSlot.level = level;
+    if (level === 1) {
+      changedMilestones.level1 = newTime as Timeslot;
+    } else if (level === 2) {
+      changedMilestones.level2 = newTime as Timeslot;
+    } else if (level === 3) {
+      changedMilestones.level3 = newTime as Timeslot;
+    }
 
-    setGoalsBrokenDown(newGoalsBrokenDown);
+    setMilestones(newMilestones);
   };
 
-  const renderTimeSlot = (progressSlot: ProgressSlot, index: number, lowerbound: Timeslot, upperbound: Timeslot) => {
+  const renderTimeSlot = (something: X, key: number) => {
+    const { progressSlot, index, lowerbound, upperbound } = something;
+
     if (progressSlot.what)
       return (
         <LevelTableCell
+          key={key}
           index={index}
           level={progressSlot.level as Level}
           value={progressSlot.what}
@@ -82,6 +116,7 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
 
     return (
       <EmptyTableCell
+        key={key}
         index={index}
         time={progressSlot.when}
         onDrop={handleDrop}
@@ -89,12 +124,30 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     );
   };
 
+  const generateTimeslots = (
+    progressLine: ProgressSlot[],
+    index: number
+  ): X[] => {
+    let ret: X[] = [];
+
+    let lowerbound = "2021" as Timeslot;
+    let upperbound = "2028" as Timeslot;
+    for (let i = 0; i < progressLine.length; i += 1) {
+      const progressSlot: ProgressSlot = progressLine[i];
+      ret.push({ progressSlot, index, lowerbound, upperbound });
+      if (progressSlot.level) {
+        lowerbound = progressSlot.when;
+      }
+    }
+    return ret;
+  };
+
   const renderGoalRow = (goalBrokenDown: GoalBrokenDown, index: number) => (
     <TableRow key={index}>
       <TableCell align="right">{index + 1}</TableCell>
       <TableCell align="right">{goalBrokenDown.goal.name}</TableCell>
-      {goalBrokenDown.progressLine.map((progressSlot: ProgressSlot) =>
-        renderTimeSlot(progressSlot, index, '2021', '2026')
+      {generateTimeslots(goalBrokenDown.progressLine, index).map(
+        renderTimeSlot
       )}
     </TableRow>
   );
@@ -107,8 +160,10 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell align="center">Nazwa</TableCell>
-              {columns.map((column) => (
-                <TableCell align="center">{column}</TableCell>
+              {columns.map((column, index) => (
+                <TableCell align="center" key={`time-column-${index}`}>
+                  {column}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
