@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -17,6 +17,7 @@ import {
   Timeslot,
   Level,
   Milestones,
+  isMilestonesValid,
 } from "./types";
 import { DndLevel } from "./Breakdown/types";
 
@@ -49,8 +50,12 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     }));
   };
 
-  const getBreakdowns = (milestones: Milestones[]): GoalBrokenDown[] => {
-    return milestones.map((milestone: Milestones) => {
+  const initialMilestones: Milestones[] = getInitialMilestones(goals);
+
+  const [milestones, setMilestones] = useState(initialMilestones);
+
+  const goalsBrokenDown = useMemo((): GoalBrokenDown[] => {
+    const x = milestones.map((milestone: Milestones) => {
       const { goal } = milestone;
       const progressLine: ProgressSlot[] = [
         { when: milestone.level1, what: goal.level1, level: 1 },
@@ -71,20 +76,10 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
 
       return { goal, progressLine: sortedProgressLine };
     });
-  };
+    return x;
+  }, [milestones]);
 
-  const initialMilestones: Milestones[] = getInitialMilestones(goals);
-
-  const [milestones, setMilestones] = useState(initialMilestones);
-
-  const goalsBrokenDown = getBreakdowns(milestones);
-
-  const handleDrop = (
-    newTime: string,
-    { index, level, value, time: oldTime }: DndLevel
-  ) => {
-    console.log("Dropped!", { index, level, value, time: oldTime, newTime });
-
+  const handleDrop = (newTime: string, { index, level }: DndLevel) => {
     const newMilestones: Milestones[] = [...milestones];
     const changedMilestones: Milestones = newMilestones[index];
 
@@ -95,6 +90,18 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     } else if (level === 3) {
       changedMilestones.level3 = newTime as Timeslot;
     }
+
+    if (
+      !isMilestonesValid(
+        changedMilestones.level1,
+        changedMilestones.level2,
+        changedMilestones.level3
+      )
+    )
+      return;
+
+    console.log({ changedMilestones });
+    console.log({ newMilestones });
 
     setMilestones(newMilestones);
   };

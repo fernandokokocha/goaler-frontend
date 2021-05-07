@@ -1,8 +1,6 @@
 import { Timeslot } from "../types";
 
-export const ItemTypes = {
-  LEVEL: "level",
-};
+export const getItemType = (index: number) => `level-${index}`;
 
 export type DndLevel = {
   index: number;

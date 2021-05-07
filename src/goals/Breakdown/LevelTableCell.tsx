@@ -3,7 +3,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TableCell from "@material-ui/core/TableCell";
 import { brown, grey, yellow } from "@material-ui/core/colors";
 import { useDrag } from "react-dnd";
-import { ItemTypes } from "./types";
+import { getItemType } from "./types";
 import { DndLevel } from "./types";
 import { Timeslot } from "../types";
 
@@ -48,7 +48,7 @@ const Draggable: FC<{
   };
   const [{ isDragging }, dragRef] = useDrag(
     () => ({
-      type: ItemTypes.LEVEL,
+      type: getItemType(index),
       item: dndItem,
       collect: (monitor) => ({
         isDragging: monitor.isDragging(),
