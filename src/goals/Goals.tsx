@@ -20,61 +20,61 @@ const rows: Goal[] = [
     progress: 5,
     visualization: "https://i.ytimg.com/vi/hZm_WKd1POM/mqdefault.jpg",
   },
-  {
-    name: "Blogger",
-    inspiration: {
-      name: "Andrzej Krzywda",
-      link: null,
-    },
-    explanation: "Napisane blog posty",
-    level1: 10,
-    level2: 100,
-    level3: 1000,
-    progress: 1,
-    visualization:
-      "https://blog-arkency.imgix.net/~text?bg=C41D48&fit=max&h=315&txt=Most%20controversial%20rules%20in%20Arkency&txtalign=middle%2Ccenter&txtclr=FFF&txtfont=Georgia%2CBold&txtpad=30&txtsize=42&w=640",
-  },
-  {
-    name: "1000 true fans",
-    inspiration: {
-      name: "Kevin Kelly",
-      link: "https://kk.org/thetechnium/1000-true-fans/",
-    },
-    explanation: "Fani - ktoś kto kupił 2 produkty",
-    level1: 1,
-    level2: 33,
-    level3: 1000,
-    progress: 0,
-    visualization: "https://kk.org/mt-files/thetechnium-mt/TrueFans-1.jpg",
-  },
-  {
-    name: "Architekt",
-    inspiration: {
-      name: "Darek",
-      link: null,
-    },
-    explanation: "Liczba side projektów, z których ktoś korzysta",
-    level1: 1,
-    level2: 3,
-    level3: 10,
-    progress: 5,
-    visualization:
-      "http://dreamlevels.com/wp-content/uploads/2020/02/programming-languages.jpeg",
-  },
-  {
-    name: "Miracle morning",
-    inspiration: {
-      name: "Hal Elrod",
-      link: null,
-    },
-    explanation: "Miracle Morning z rzędu",
-    level1: 30,
-    level2: 90,
-    level3: 365,
-    progress: 11,
-    visualization:
-      "https://www.usastaffingservices.com/wp-content/uploads/2019/08/Staffing-Resource-Center-August-2019.png",
-  },
+  // {
+  //   name: "Blogger",
+  //   inspiration: {
+  //     name: "Andrzej Krzywda",
+  //     link: null,
+  //   },
+  //   explanation: "Napisane blog posty",
+  //   level1: 10,
+  //   level2: 100,
+  //   level3: 1000,
+  //   progress: 1,
+  //   visualization:
+  //     "https://blog-arkency.imgix.net/~text?bg=C41D48&fit=max&h=315&txt=Most%20controversial%20rules%20in%20Arkency&txtalign=middle%2Ccenter&txtclr=FFF&txtfont=Georgia%2CBold&txtpad=30&txtsize=42&w=640",
+  // },
+  // {
+  //   name: "1000 true fans",
+  //   inspiration: {
+  //     name: "Kevin Kelly",
+  //     link: "https://kk.org/thetechnium/1000-true-fans/",
+  //   },
+  //   explanation: "Fani - ktoś kto kupił 2 produkty",
+  //   level1: 1,
+  //   level2: 33,
+  //   level3: 1000,
+  //   progress: 0,
+  //   visualization: "https://kk.org/mt-files/thetechnium-mt/TrueFans-1.jpg",
+  // },
+  // {
+  //   name: "Architekt",
+  //   inspiration: {
+  //     name: "Darek",
+  //     link: null,
+  //   },
+  //   explanation: "Liczba side projektów, z których ktoś korzysta",
+  //   level1: 1,
+  //   level2: 3,
+  //   level3: 10,
+  //   progress: 5,
+  //   visualization:
+  //     "http://dreamlevels.com/wp-content/uploads/2020/02/programming-languages.jpeg",
+  // },
+  // {
+  //   name: "Miracle morning",
+  //   inspiration: {
+  //     name: "Hal Elrod",
+  //     link: null,
+  //   },
+  //   explanation: "Miracle Morning z rzędu",
+  //   level1: 30,
+  //   level2: 90,
+  //   level3: 365,
+  //   progress: 11,
+  //   visualization:
+  //     "https://www.usastaffingservices.com/wp-content/uploads/2019/08/Staffing-Resource-Center-August-2019.png",
+  // },
 ];
 
 export const Goals = () => {

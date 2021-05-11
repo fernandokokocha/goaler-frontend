@@ -17,24 +17,33 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Droppable: FC<{
   time: string;
   index: number;
+  level1when: Timeslot;
+  level2when: Timeslot;
+  level3when: Timeslot;
   onDrop: (time: string, item: DndLevel) => void;
-}> = ({ time, index, onDrop }) => {
+}> = ({ time, index, onDrop, level1when, level2when, level3when }) => {
   const canDropItem = (monitor: any) => {
     if (!monitor.canDrop()) return false;
 
     const item = monitor.getItem() as DndLevel;
 
-    const level1when = item.level === 1 ? (time as Timeslot) : item.level1when;
-    const level2when = item.level === 2 ? (time as Timeslot) : item.level2when;
-    const level3when = item.level === 3 ? (time as Timeslot) : item.level3when;
+    const miletone1 = item.level === 1 ? (time as Timeslot) : level1when;
+    const miletone2 = item.level === 2 ? (time as Timeslot) : level2when;
+    const miletone3 = item.level === 3 ? (time as Timeslot) : level3when;
 
     console.log(
       "canDrop?",
-      { time, item },
-      isMilestonesValid(level1when, level2when, level3when)
+      {
+        time,
+        item,
+        miletone1,
+        miletone2,
+        miletone3,
+      },
+      isMilestonesValid(miletone1, miletone2, miletone3)
     );
 
-    return isMilestonesValid(level1when, level2when, level3when);
+    return isMilestonesValid(miletone1, miletone2, miletone3);
   };
 
   const [{ canDrop, hover }, drop] = useDrop(() => ({
@@ -71,13 +80,23 @@ export const Droppable: FC<{
 export const EmptyTableCell: FC<{
   time: string;
   index: number;
+  level1when: Timeslot;
+  level2when: Timeslot;
+  level3when: Timeslot;
   onDrop: (time: string, item: DndLevel) => void;
-}> = ({ time, index, onDrop }) => {
+}> = ({ time, index, onDrop, level1when, level2when, level3when }) => {
   const classes = useStyles();
 
   return (
     <TableCell align="right" className={classes.levelTableCell}>
-      <Droppable index={index} time={time} onDrop={onDrop} />
+      <Droppable
+        index={index}
+        time={time}
+        onDrop={onDrop}
+        level1when={level1when}
+        level2when={level2when}
+        level3when={level3when}
+      />
     </TableCell>
   );
 };

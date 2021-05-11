@@ -42,9 +42,6 @@ const Draggable: FC<{
     level,
     value,
     time,
-    level1when,
-    level2when,
-    level3when,
   };
   const [{ isDragging }, dragRef] = useDrag(
     () => ({

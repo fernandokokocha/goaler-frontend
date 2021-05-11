@@ -23,10 +23,53 @@ import { DndLevel } from "./Breakdown/types";
 
 type X = {
   progressSlot: ProgressSlot;
-  index: number;
+  goalIndex: number;
+  key: number;
   level1when: Timeslot;
   level2when: Timeslot;
   level3when: Timeslot;
+};
+
+const TimeslotCell = ({
+  something,
+  handleDrop,
+}: {
+  something: X;
+  handleDrop: any;
+}) => {
+  const {
+    progressSlot,
+    goalIndex,
+    level1when,
+    level2when,
+    level3when,
+  } = something;
+
+  if (progressSlot.what)
+    return (
+      <LevelTableCell
+        // key={key}
+        index={goalIndex}
+        level={progressSlot.level as Level}
+        value={progressSlot.what}
+        time={progressSlot.when}
+        level1when={level1when}
+        level2when={level2when}
+        level3when={level3when}
+      />
+    );
+
+  return (
+    <EmptyTableCell
+      // key={key}
+      index={goalIndex}
+      time={progressSlot.when}
+      onDrop={handleDrop}
+      level1when={level1when}
+      level2when={level2when}
+      level3when={level3when}
+    />
+  );
 };
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
@@ -76,12 +119,13 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
 
       return { goal, progressLine: sortedProgressLine };
     });
+    console.log("goalsBrokenDown", { milestones, x });
     return x;
   }, [milestones]);
 
   const handleDrop = (newTime: string, { index, level }: DndLevel) => {
-    const newMilestones: Milestones[] = [...milestones];
-    const changedMilestones: Milestones = newMilestones[index];
+    const changedMilestones: Milestones = { ...milestones[index] };
+    console.log("handleDrop", { changedMilestones });
 
     if (level === 1) {
       changedMilestones.level1 = newTime as Timeslot;
@@ -100,43 +144,11 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     )
       return;
 
-    console.log({ changedMilestones });
-    console.log({ newMilestones });
+    const newMilestones = [...milestones];
+    newMilestones[index] = changedMilestones;
 
+    console.log(`setting milestones ${index}`, { newMilestones });
     setMilestones(newMilestones);
-  };
-
-  const renderTimeSlot = (something: X, key: number) => {
-    const {
-      progressSlot,
-      index,
-      level1when,
-      level2when,
-      level3when,
-    } = something;
-
-    if (progressSlot.what)
-      return (
-        <LevelTableCell
-          key={key}
-          index={index}
-          level={progressSlot.level as Level}
-          value={progressSlot.what}
-          time={progressSlot.when}
-          level1when={level1when}
-          level2when={level2when}
-          level3when={level3when}
-        />
-      );
-
-    return (
-      <EmptyTableCell
-        key={key}
-        index={index}
-        time={progressSlot.when}
-        onDrop={handleDrop}
-      />
-    );
   };
 
   const generateTimeslots = (goal: GoalBrokenDown, index: number): X[] => {
@@ -156,8 +168,16 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
       const level3 = goal.progressLine.find(({ level }) => level == 3);
       const level3when: Timeslot = level3 ? level3.when : "2021";
 
-      ret.push({ progressSlot, index, level1when, level2when, level3when });
+      ret.push({
+        progressSlot,
+        key: i,
+        goalIndex: index,
+        level1when,
+        level2when,
+        level3when,
+      });
     }
+    console.log("generateTimeslots", { ret });
     return ret;
   };
 
@@ -165,7 +185,13 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
     <TableRow key={index}>
       <TableCell align="right">{index + 1}</TableCell>
       <TableCell align="right">{goalBrokenDown.goal.name}</TableCell>
-      {generateTimeslots(goalBrokenDown, index).map(renderTimeSlot)}
+      {generateTimeslots(goalBrokenDown, index).map((generatedTimeslot) => (
+        <TimeslotCell
+          something={generatedTimeslot}
+          key={generatedTimeslot.key}
+          handleDrop={handleDrop}
+        />
+      ))}
     </TableRow>
   );
 
