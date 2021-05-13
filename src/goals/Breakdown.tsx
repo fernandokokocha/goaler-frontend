@@ -8,192 +8,71 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { LevelTableCell } from "./Breakdown/LevelTableCell";
-import { EmptyTableCell } from "./Breakdown/EmptyTableCell";
-import {
-  Goal,
-  GoalBrokenDown,
-  ProgressSlot,
-  Timeslot,
-  Level,
-  Milestones,
-  isMilestonesValid,
-} from "./types";
-import { DndLevel } from "./Breakdown/types";
+import { Goal, Timeslot } from "./types";
 
-type X = {
-  progressSlot: ProgressSlot;
-  goalIndex: number;
-  key: number;
-  level1when: Timeslot;
-  level2when: Timeslot;
-  level3when: Timeslot;
+const columns: Timeslot[] = [
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+  "2026",
+  "2027",
+  "2028",
+];
+
+type ProgressCheckpoint = {
+  when: Timeslot;
+  progressPlanned?: number;
+  level?: 1 | 2 | 3;
 };
 
-const TimeslotCell = ({
-  something,
-  handleDrop,
-}: {
-  something: X;
-  handleDrop: any;
-}) => {
-  const {
-    progressSlot,
-    goalIndex,
-    level1when,
-    level2when,
-    level3when,
-  } = something;
+const getProgressLine = (goal: Goal): ProgressCheckpoint[] => {
+  return [
+    { when: "2021" as Timeslot, progressPlanned: goal.level1, level: 1 },
+    { when: "2022" as Timeslot, progressPlanned: goal.level2, level: 2 },
+    { when: "2023" as Timeslot, progressPlanned: goal.level3 / 2 },
+    { when: "2024" as Timeslot, progressPlanned: goal.level3, level: 3 },
+    { when: "2025" as Timeslot },
+    { when: "2026" as Timeslot },
+    { when: "2027" as Timeslot },
+    { when: "2028" as Timeslot },
+  ];
+};
 
-  if (progressSlot.what)
-    return (
-      <LevelTableCell
-        // key={key}
-        index={goalIndex}
-        level={progressSlot.level as Level}
-        value={progressSlot.what}
-        time={progressSlot.when}
-        level1when={level1when}
-        level2when={level2when}
-        level3when={level3when}
-      />
-    );
+const ProgressSlot = ({
+  progressCheckpoint,
+}: {
+  progressCheckpoint: ProgressCheckpoint;
+}) => {
+  let style = {};
+  if (progressCheckpoint.level === 1) style = { backgroundColor: "brown" };
+  if (progressCheckpoint.level === 2) style = { backgroundColor: "grey" };
+  if (progressCheckpoint.level === 3) style = { backgroundColor: "yellow" };
 
   return (
-    <EmptyTableCell
-      // key={key}
-      index={goalIndex}
-      time={progressSlot.when}
-      onDrop={handleDrop}
-      level1when={level1when}
-      level2when={level2when}
-      level3when={level3when}
-    />
+    <TableCell align="right" key={progressCheckpoint.when} style={style}>
+      {progressCheckpoint.progressPlanned}
+    </TableCell>
+  );
+};
+
+const GoalRow = ({ goal, index }: { goal: Goal; index: number }) => {
+  const progressLine: ProgressCheckpoint[] = getProgressLine(goal);
+
+  return (
+    <TableRow key={index}>
+      <TableCell align="right">{index + 1}</TableCell>
+      <TableCell align="right">{goal.name}</TableCell>
+      {progressLine.map((progressCheckpoint: ProgressCheckpoint) => (
+        <ProgressSlot progressCheckpoint={progressCheckpoint} />
+      ))}
+    </TableRow>
   );
 };
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
-  const columns: Timeslot[] = [
-    "2021",
-    "2022",
-    "2023",
-    "2024",
-    "2025",
-    "2026",
-    "2027",
-    "2028",
-  ];
-
-  const getInitialMilestones = (goals: Goal[]): Milestones[] => {
-    return goals.map((goal: Goal) => ({
-      goal: goal,
-      level1: "2021",
-      level2: "2022",
-      level3: "2023",
-    }));
-  };
-
-  const initialMilestones: Milestones[] = getInitialMilestones(goals);
-
-  const [milestones, setMilestones] = useState(initialMilestones);
-
-  const goalsBrokenDown = useMemo((): GoalBrokenDown[] => {
-    const x = milestones.map((milestone: Milestones) => {
-      const { goal } = milestone;
-      const progressLine: ProgressSlot[] = [
-        { when: milestone.level1, what: goal.level1, level: 1 },
-        { when: milestone.level2, what: goal.level2, level: 2 },
-        { when: milestone.level3, what: goal.level3, level: 3 },
-      ];
-
-      columns.forEach((column) => {
-        const found = progressLine.find(({ when }) => when === column);
-        if (!found) {
-          progressLine.push({ when: column, what: null });
-        }
-      });
-
-      const sortedProgressLine: ProgressSlot[] = progressLine.sort(
-        (a, b) => Number(a.when) - Number(b.when)
-      );
-
-      return { goal, progressLine: sortedProgressLine };
-    });
-    console.log("goalsBrokenDown", { milestones, x });
-    return x;
-  }, [milestones]);
-
-  const handleDrop = (newTime: string, { index, level }: DndLevel) => {
-    const changedMilestones: Milestones = { ...milestones[index] };
-    console.log("handleDrop", { changedMilestones });
-
-    if (level === 1) {
-      changedMilestones.level1 = newTime as Timeslot;
-    } else if (level === 2) {
-      changedMilestones.level2 = newTime as Timeslot;
-    } else if (level === 3) {
-      changedMilestones.level3 = newTime as Timeslot;
-    }
-
-    if (
-      !isMilestonesValid(
-        changedMilestones.level1,
-        changedMilestones.level2,
-        changedMilestones.level3
-      )
-    )
-      return;
-
-    const newMilestones = [...milestones];
-    newMilestones[index] = changedMilestones;
-
-    console.log(`setting milestones ${index}`, { newMilestones });
-    setMilestones(newMilestones);
-  };
-
-  const generateTimeslots = (goal: GoalBrokenDown, index: number): X[] => {
-    let ret: X[] = [];
-
-    const { progressLine } = goal;
-
-    for (let i = 0; i < progressLine.length; i += 1) {
-      const progressSlot: ProgressSlot = progressLine[i];
-
-      const level1 = goal.progressLine.find(({ level }) => level == 1);
-      const level1when: Timeslot = level1 ? level1.when : "2021";
-
-      const level2 = goal.progressLine.find(({ level }) => level == 2);
-      const level2when: Timeslot = level2 ? level2.when : "2021";
-
-      const level3 = goal.progressLine.find(({ level }) => level == 3);
-      const level3when: Timeslot = level3 ? level3.when : "2021";
-
-      ret.push({
-        progressSlot,
-        key: i,
-        goalIndex: index,
-        level1when,
-        level2when,
-        level3when,
-      });
-    }
-    console.log("generateTimeslots", { ret });
-    return ret;
-  };
-
-  const renderGoalRow = (goalBrokenDown: GoalBrokenDown, index: number) => (
-    <TableRow key={index}>
-      <TableCell align="right">{index + 1}</TableCell>
-      <TableCell align="right">{goalBrokenDown.goal.name}</TableCell>
-      {generateTimeslots(goalBrokenDown, index).map((generatedTimeslot) => (
-        <TimeslotCell
-          something={generatedTimeslot}
-          key={generatedTimeslot.key}
-          handleDrop={handleDrop}
-        />
-      ))}
-    </TableRow>
-  );
+  console.log({ goals });
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -210,7 +89,11 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>{goalsBrokenDown.map(renderGoalRow)}</TableBody>
+          <TableBody>
+            {goals.map((goal, index) => (
+              <GoalRow goal={goal} index={index} key={index} />
+            ))}
+          </TableBody>
         </Table>
       </TableContainer>
     </DndProvider>
