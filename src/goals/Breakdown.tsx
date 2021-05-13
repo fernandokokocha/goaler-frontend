@@ -9,6 +9,7 @@ import Paper from "@material-ui/core/Paper";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Goal, Timeslot } from "./types";
+import { Button } from "@material-ui/core";
 
 const columns: Timeslot[] = [
   "2021",
@@ -45,14 +46,37 @@ const ProgressSlot = ({
 }: {
   progressCheckpoint: ProgressCheckpoint;
 }) => {
-  let style = {};
-  if (progressCheckpoint.level === 1) style = { backgroundColor: "brown" };
-  if (progressCheckpoint.level === 2) style = { backgroundColor: "grey" };
-  if (progressCheckpoint.level === 3) style = { backgroundColor: "yellow" };
+  let style: any = {};
+  if (progressCheckpoint.level === 1) style.backgroundColor = "brown";
+  if (progressCheckpoint.level === 2) style.backgroundColor = "grey";
+  if (progressCheckpoint.level === 3) style.backgroundColor = "yellow";
+
+  const options = [];
+  if (!progressCheckpoint.progressPlanned)
+    options.push(
+      <Button variant="contained" size="small" color="primary">
+        Add
+      </Button>
+    );
+  if (progressCheckpoint.progressPlanned)
+    options.push(
+      <Button variant="contained" size="small" color="primary">
+        Move
+      </Button>
+    );
+  if (!progressCheckpoint.level && progressCheckpoint.progressPlanned)
+    options.push(
+      <Button variant="contained" size="small" color="primary">
+        Remove
+      </Button>
+    );
 
   return (
     <TableCell align="right" key={progressCheckpoint.when} style={style}>
-      {progressCheckpoint.progressPlanned}
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div>{progressCheckpoint.progressPlanned}</div>
+        <div>{options}</div>
+      </div>
     </TableCell>
   );
 };
