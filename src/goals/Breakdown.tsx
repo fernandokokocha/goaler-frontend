@@ -10,8 +10,10 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Goal, Timeslot } from "./types";
 import { Button } from "@material-ui/core";
+import cloneDeep from "lodash/cloneDeep";
+import AddValueDialog from "./Breakdown/AddValueDialog";
 
-const columns: Timeslot[] = [
+export const columns: Timeslot[] = [
   "2021",
   "2022",
   "2023",
@@ -22,13 +24,15 @@ const columns: Timeslot[] = [
   "2028",
 ];
 
-type ProgressCheckpoint = {
+export type ProgressCheckpoint = {
   when: Timeslot;
   progressPlanned?: number;
   level?: 1 | 2 | 3;
 };
 
-const getProgressLine = (goal: Goal): ProgressCheckpoint[] => {
+export type ProgressSlotAction = "move" | "remove" | "add";
+
+const getInitialProgressLine = (goal: Goal): ProgressCheckpoint[] => {
   return [
     { when: "2021" as Timeslot, progressPlanned: goal.level1, level: 1 },
     { when: "2022" as Timeslot, progressPlanned: goal.level2, level: 2 },
@@ -43,30 +47,50 @@ const getProgressLine = (goal: Goal): ProgressCheckpoint[] => {
 
 const ProgressSlot = ({
   progressCheckpoint,
+  onAction,
 }: {
   progressCheckpoint: ProgressCheckpoint;
+  onAction: (action: ProgressSlotAction, when: Timeslot, value?: number) => any;
 }) => {
   let style: any = {};
   if (progressCheckpoint.level === 1) style.backgroundColor = "brown";
   if (progressCheckpoint.level === 2) style.backgroundColor = "grey";
   if (progressCheckpoint.level === 3) style.backgroundColor = "yellow";
 
+  const handleAction = (action: ProgressSlotAction) => {
+    onAction(action, progressCheckpoint.when);
+  };
+
   const options = [];
   if (!progressCheckpoint.progressPlanned)
     options.push(
-      <Button variant="contained" size="small" color="primary">
-        Add
-      </Button>
+      <AddValueDialog
+        progressCheckpoint={progressCheckpoint}
+        onAction={onAction}
+        key="add"
+      />
     );
   if (progressCheckpoint.progressPlanned)
     options.push(
-      <Button variant="contained" size="small" color="primary">
+      <Button
+        variant="contained"
+        size="small"
+        color="primary"
+        key="move"
+        onClick={() => handleAction("move")}
+      >
         Move
       </Button>
     );
   if (!progressCheckpoint.level && progressCheckpoint.progressPlanned)
     options.push(
-      <Button variant="contained" size="small" color="primary">
+      <Button
+        variant="contained"
+        size="small"
+        color="primary"
+        key="remove"
+        onClick={() => handleAction("remove")}
+      >
         Remove
       </Button>
     );
@@ -82,22 +106,57 @@ const ProgressSlot = ({
 };
 
 const GoalRow = ({ goal, index }: { goal: Goal; index: number }) => {
-  const progressLine: ProgressCheckpoint[] = getProgressLine(goal);
+  const initialProgressLine: ProgressCheckpoint[] = getInitialProgressLine(
+    goal
+  );
+
+  const [progressLine, setProgressLine] = useState(initialProgressLine);
+
+  const witam = useMemo(() => {
+    console.log({ progressLine });
+  }, [progressLine]);
+
+  const handleAction = (
+    action: ProgressSlotAction,
+    actionWhen: Timeslot,
+    value?: number
+  ) => {
+    const newProgressLine = cloneDeep(progressLine);
+
+    if (action === "remove") {
+      const found = newProgressLine.find(
+        ({ when }: ProgressCheckpoint) => when === actionWhen
+      ) as ProgressCheckpoint;
+      found.progressPlanned = undefined;
+      found.level = undefined;
+    }
+
+    if (action === "add") {
+      const found = newProgressLine.find(
+        ({ when }: ProgressCheckpoint) => when === actionWhen
+      ) as ProgressCheckpoint;
+      found.progressPlanned = value as number;
+    }
+
+    setProgressLine(newProgressLine);
+  };
 
   return (
     <TableRow key={index}>
       <TableCell align="right">{index + 1}</TableCell>
       <TableCell align="right">{goal.name}</TableCell>
       {progressLine.map((progressCheckpoint: ProgressCheckpoint) => (
-        <ProgressSlot progressCheckpoint={progressCheckpoint} />
+        <ProgressSlot
+          progressCheckpoint={progressCheckpoint}
+          onAction={handleAction}
+          key={progressCheckpoint.when}
+        />
       ))}
     </TableRow>
   );
 };
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
-  console.log({ goals });
-
   return (
     <DndProvider backend={HTML5Backend}>
       <TableContainer component={Paper}>
