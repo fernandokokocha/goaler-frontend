@@ -1,22 +1,24 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { ProgressCheckpoint, ProgressSlotAction } from "../Breakdown";
 import { Timeslot } from "../types";
+import { MenuItem, Select } from "@material-ui/core";
 
-export default function AddValueDialog({
+export default function MoveValueDialog({
   progressCheckpoint,
   onAction,
+  columns,
 }: {
   progressCheckpoint: ProgressCheckpoint;
-  onAction: (action: ProgressSlotAction, when: Timeslot, value?: number) => any;
+  onAction: (action: ProgressSlotAction, when: Timeslot, value?: any) => any;
+  columns: Timeslot[];
 }) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(progressCheckpoint.when);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -27,8 +29,13 @@ export default function AddValueDialog({
   };
 
   const handleSubmit = () => {
-    onAction("add", progressCheckpoint.when, value);
+    onAction("move", progressCheckpoint.when, value);
+    handleClose();
   };
+
+  let title = `Move ${progressCheckpoint.progressPlanned}`;
+  if (progressCheckpoint.level) title += ` (level ${progressCheckpoint.level})`;
+  title += ` from ${progressCheckpoint.when}`;
 
   return (
     <div>
@@ -38,28 +45,27 @@ export default function AddValueDialog({
         size="small"
         onClick={handleClickOpen}
       >
-        Add
+        Move
       </Button>
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby="add-dialog-title"
+        aria-labelledby="move-dialog-title"
       >
-        <DialogTitle id="add-dialog-title">
-          Add value to {progressCheckpoint.when}
-        </DialogTitle>
+        <DialogTitle id="move-dialog-title">{title}</DialogTitle>
         <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            type="number"
-            fullWidth
+          <Select
             value={value}
             onChange={(e) => {
-              setValue(Number(e.target.value));
+              setValue(e.target.value as Timeslot);
             }}
-          />
+          >
+            {columns.map((column) => (
+              <MenuItem value={column} key={column}>
+                {column}
+              </MenuItem>
+            ))}
+          </Select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">

@@ -12,6 +12,7 @@ import { Goal, Timeslot } from "./types";
 import { Button } from "@material-ui/core";
 import cloneDeep from "lodash/cloneDeep";
 import AddValueDialog from "./Breakdown/AddValueDialog";
+import MoveValueDialog from "./Breakdown/MoveValueDialog";
 
 export const columns: Timeslot[] = [
   "2021",
@@ -72,15 +73,12 @@ const ProgressSlot = ({
     );
   if (progressCheckpoint.progressPlanned)
     options.push(
-      <Button
-        variant="contained"
-        size="small"
-        color="primary"
+      <MoveValueDialog
+        progressCheckpoint={progressCheckpoint}
+        onAction={onAction}
+        columns={columns}
         key="move"
-        onClick={() => handleAction("move")}
-      >
-        Move
-      </Button>
+      />
     );
   if (!progressCheckpoint.level && progressCheckpoint.progressPlanned)
     options.push(
@@ -119,7 +117,7 @@ const GoalRow = ({ goal, index }: { goal: Goal; index: number }) => {
   const handleAction = (
     action: ProgressSlotAction,
     actionWhen: Timeslot,
-    value?: number
+    value?: any
   ) => {
     const newProgressLine = cloneDeep(progressLine);
 
@@ -136,6 +134,21 @@ const GoalRow = ({ goal, index }: { goal: Goal; index: number }) => {
         ({ when }: ProgressCheckpoint) => when === actionWhen
       ) as ProgressCheckpoint;
       found.progressPlanned = value as number;
+    }
+
+    if (action === "move") {
+      const found = newProgressLine.find(
+        ({ when }: ProgressCheckpoint) => when === actionWhen
+      ) as ProgressCheckpoint;
+      const memo = cloneDeep(found);
+      found.progressPlanned = undefined;
+      found.level = undefined;
+
+      const newFound = newProgressLine.find(
+        ({ when }: ProgressCheckpoint) => when === (value as Timeslot)
+      ) as ProgressCheckpoint;
+      newFound.progressPlanned = memo.progressPlanned;
+      newFound.level = memo.level;
     }
 
     setProgressLine(newProgressLine);
