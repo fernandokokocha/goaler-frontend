@@ -11,6 +11,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { Goal, Timeslot } from "./types";
 import { Button } from "@material-ui/core";
 import cloneDeep from "lodash/cloneDeep";
+import sortBy from "lodash/sortBy";
 import AddValueDialog from "./Breakdown/AddValueDialog";
 import MoveValueDialog from "./Breakdown/MoveValueDialog";
 
@@ -32,6 +33,20 @@ export type ProgressCheckpoint = {
 };
 
 export type ProgressSlotAction = "move" | "remove" | "add";
+
+const validateProgressLine = (progressLine: ProgressCheckpoint[]): boolean => {
+  const sorted = sortBy(progressLine, "when");
+  let lastValue = undefined;
+  for (let i = 0; i < sorted.length; i += 1) {
+    const item: ProgressCheckpoint = sorted[i];
+    if (!item.progressPlanned) continue;
+
+    if (lastValue && item.progressPlanned < lastValue) return false;
+
+    lastValue = item.progressPlanned;
+  }
+  return true;
+};
 
 const getInitialProgressLine = (goal: Goal): ProgressCheckpoint[] => {
   return [
@@ -151,7 +166,11 @@ const GoalRow = ({ goal, index }: { goal: Goal; index: number }) => {
       newFound.level = memo.level;
     }
 
-    setProgressLine(newProgressLine);
+    const isValid = validateProgressLine(newProgressLine);
+    if (isValid) setProgressLine(newProgressLine);
+    else {
+      console.log("invalid progress line created; abort");
+    }
   };
 
   return (

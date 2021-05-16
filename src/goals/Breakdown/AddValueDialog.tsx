@@ -28,6 +28,7 @@ export default function AddValueDialog({
 
   const handleSubmit = () => {
     onAction("add", progressCheckpoint.when, value);
+    handleClose();
   };
 
   return (
