@@ -23,15 +23,7 @@ export type CurrentLevel = {
 
 export type Level = 1 | 2 | 3;
 
-export type Timeslot =
-  | "2021"
-  | "2022"
-  | "2023"
-  | "2024"
-  | "2025"
-  | "2026"
-  | "2027"
-  | "2028";
+export type Timeslot = string;
 
 export type ProgressSlot = {
   when: Timeslot;

@@ -6,16 +6,14 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { Goal, Timeslot } from "./types";
-import { Button } from "@material-ui/core";
+import { Button, TextField, Typography } from "@material-ui/core";
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
 import AddValueDialog from "./Breakdown/AddValueDialog";
 import MoveValueDialog from "./Breakdown/MoveValueDialog";
 
-export const columns: Timeslot[] = [
+export const initialColumns: Timeslot[] = [
   "2021",
   "2022",
   "2023",
@@ -64,9 +62,11 @@ const getInitialProgressLine = (goal: Goal): ProgressCheckpoint[] => {
 const ProgressSlot = ({
   progressCheckpoint,
   onAction,
+  columns,
 }: {
   progressCheckpoint: ProgressCheckpoint;
   onAction: (action: ProgressSlotAction, when: Timeslot, value?: number) => any;
+  columns: Timeslot[];
 }) => {
   let style: any = {};
   if (progressCheckpoint.level === 1) style.backgroundColor = "brown";
@@ -118,7 +118,15 @@ const ProgressSlot = ({
   );
 };
 
-const GoalRow = ({ goal, index }: { goal: Goal; index: number }) => {
+const GoalRow = ({
+  goal,
+  index,
+  columns,
+}: {
+  goal: Goal;
+  index: number;
+  columns: Timeslot[];
+}) => {
   const initialProgressLine: ProgressCheckpoint[] = getInitialProgressLine(
     goal
   );
@@ -182,6 +190,7 @@ const GoalRow = ({ goal, index }: { goal: Goal; index: number }) => {
           progressCheckpoint={progressCheckpoint}
           onAction={handleAction}
           key={progressCheckpoint.when}
+          columns={columns}
         />
       ))}
     </TableRow>
@@ -189,10 +198,25 @@ const GoalRow = ({ goal, index }: { goal: Goal; index: number }) => {
 };
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
+  const [columns, setColumns] = useState(initialColumns);
+  const [newColumn, setNewColumn] = useState("");
+
+  const onSubmit = () => {
+    const newColumns = [...columns];
+    const found = newColumns.find((column) => column == newColumn);
+    if (!found) {
+      newColumns.push(newColumn);
+      const newColumnsSorted = newColumns.sort();
+      setColumns(newColumnsSorted);
+    }
+
+    setNewColumn("");
+  };
+
   return (
-    <DndProvider backend={HTML5Backend}>
+    <>
       <TableContainer component={Paper}>
-        <Table aria-label="simple table" size="small">
+        <Table aria-label="goals breakdown" size="small">
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
@@ -206,11 +230,48 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
           </TableHead>
           <TableBody>
             {goals.map((goal, index) => (
-              <GoalRow goal={goal} index={index} key={index} />
+              <GoalRow
+                goal={goal}
+                index={index}
+                key={index}
+                columns={columns}
+              />
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-    </DndProvider>
+      <Typography variant="h4">Kolumny</Typography>
+      <TableContainer component={Paper}>
+        <Table aria-label="columns table" size="small">
+          <TableBody>
+            {columns.map((column, index) => (
+              <TableRow>
+                <TableCell align="center" key={`column-${index}`}>
+                  {column}
+                </TableCell>
+              </TableRow>
+            ))}
+            <TableRow>
+              <TableCell align="center" key={`add-column`}>
+                <TextField
+                  id="add-new-column"
+                  type="text"
+                  placeholder="Add new"
+                  value={newColumn}
+                  onChange={(e) => {
+                    setNewColumn(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      onSubmit();
+                    }
+                  }}
+                />
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
