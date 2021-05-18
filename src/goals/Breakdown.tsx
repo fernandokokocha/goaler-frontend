@@ -137,6 +137,17 @@ const GoalRow = ({
     console.log({ progressLine });
   }, [progressLine]);
 
+  useMemo(() => {
+    columns.forEach((column) => {
+      const found = progressLine.find(({ when }) => when === column);
+      if (!found) {
+        progressLine.push({ when: column });
+      }
+    });
+    const newProgressLine = sortBy(progressLine, "when");
+    setProgressLine(newProgressLine);
+  }, [columns]);
+
   const handleAction = (
     action: ProgressSlotAction,
     actionWhen: Timeslot,
