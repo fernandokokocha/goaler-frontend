@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -7,11 +7,12 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Goal, Timeslot } from "./types";
-import { Button, TextField, Typography } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
 import AddValueDialog from "./Breakdown/AddValueDialog";
 import MoveValueDialog from "./Breakdown/MoveValueDialog";
+import { ColumnList } from "./Breakdown/ColumnList";
 
 export const initialColumns: Timeslot[] = [
   "2021",
@@ -210,19 +211,6 @@ const GoalRow = ({
 
 export const Breakdown = ({ goals }: { goals: Goal[] }) => {
   const [columns, setColumns] = useState(initialColumns);
-  const [newColumn, setNewColumn] = useState("");
-
-  const onSubmit = () => {
-    const newColumns = [...columns];
-    const found = newColumns.find((column) => column == newColumn);
-    if (!found) {
-      newColumns.push(newColumn);
-      const newColumnsSorted = newColumns.sort();
-      setColumns(newColumnsSorted);
-    }
-
-    setNewColumn("");
-  };
 
   return (
     <>
@@ -251,38 +239,7 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Typography variant="h4">Kolumny</Typography>
-      <TableContainer component={Paper}>
-        <Table aria-label="columns table" size="small">
-          <TableBody>
-            {columns.map((column, index) => (
-              <TableRow>
-                <TableCell align="center" key={`column-${index}`}>
-                  {column}
-                </TableCell>
-              </TableRow>
-            ))}
-            <TableRow>
-              <TableCell align="center" key={`add-column`}>
-                <TextField
-                  id="add-new-column"
-                  type="text"
-                  placeholder="Add new"
-                  value={newColumn}
-                  onChange={(e) => {
-                    setNewColumn(e.target.value);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      onSubmit();
-                    }
-                  }}
-                />
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <ColumnList columns={columns} setColumns={setColumns} />
     </>
   );
 };
