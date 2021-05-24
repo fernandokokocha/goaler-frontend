@@ -1,6 +1,6 @@
 import { Goal } from "../types";
 import { ProgressCheckpoint } from "./types";
-import { getInitialProgressLine, validateProgressLine } from "./ProgressLine";
+import { ProgressLine } from "./ProgressLine";
 
 const goal: Goal = {
   name: "Video is king",
@@ -18,7 +18,7 @@ const goal: Goal = {
 
 describe("getInitialProgressLine", () => {
   it("generates dummy progress line based on goal", () => {
-    expect(getInitialProgressLine(goal)).toEqual([
+    expect(ProgressLine.fromGoal(goal).toArray()).toEqual([
       { level: 1, progressPlanned: 10, when: "2021" },
       { level: 2, progressPlanned: 100, when: "2022" },
       { progressPlanned: 500, when: "2023" },
@@ -33,8 +33,8 @@ describe("getInitialProgressLine", () => {
 
 describe("validateProgressLine", () => {
   it("validates positive initial progress line", () => {
-    const initialProgressLine = getInitialProgressLine(goal);
-    expect(validateProgressLine(initialProgressLine)).toBe(true);
+    const initialProgressLine = ProgressLine.fromGoal(goal);
+    expect(initialProgressLine.isValid()).toBe(true);
   });
 
   it("validates positive simplest progress line", () => {
@@ -43,7 +43,9 @@ describe("validateProgressLine", () => {
       { level: 2, progressPlanned: 100, when: "2022" },
       { level: 3, progressPlanned: 1000, when: "2023" },
     ];
-    expect(validateProgressLine(progressLine)).toBe(true);
+    expect(
+      ProgressLine.fromProgressCheckpointList(progressLine).isValid()
+    ).toBe(true);
   });
 
   it("validates negative not sorted values", () => {
@@ -53,7 +55,9 @@ describe("validateProgressLine", () => {
       { level: 3, progressPlanned: 1000, when: "2023" },
       { progressPlanned: 500, when: "2024" },
     ];
-    expect(validateProgressLine(progressLine)).toBe(false);
+    expect(
+      ProgressLine.fromProgressCheckpointList(progressLine).isValid()
+    ).toBe(false);
   });
 
   it("validates negative missing level 1", () => {
@@ -61,7 +65,9 @@ describe("validateProgressLine", () => {
       { level: 2, progressPlanned: 100, when: "2022" },
       { level: 3, progressPlanned: 1000, when: "2023" },
     ];
-    expect(validateProgressLine(progressLine)).toBe(false);
+    expect(
+      ProgressLine.fromProgressCheckpointList(progressLine).isValid()
+    ).toBe(false);
   });
 
   it("validates negative missing level 2", () => {
@@ -69,7 +75,9 @@ describe("validateProgressLine", () => {
       { level: 1, progressPlanned: 10, when: "2021" },
       { level: 3, progressPlanned: 1000, when: "2023" },
     ];
-    expect(validateProgressLine(progressLine)).toBe(false);
+    expect(
+      ProgressLine.fromProgressCheckpointList(progressLine).isValid()
+    ).toBe(false);
   });
 
   it("validates negative missing level 3", () => {
@@ -77,6 +85,8 @@ describe("validateProgressLine", () => {
       { level: 1, progressPlanned: 10, when: "2021" },
       { level: 2, progressPlanned: 100, when: "2022" },
     ];
-    expect(validateProgressLine(progressLine)).toBe(false);
+    expect(
+      ProgressLine.fromProgressCheckpointList(progressLine).isValid()
+    ).toBe(false);
   });
 });

@@ -6,7 +6,7 @@ import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
 import { ProgressCheckpoint, ProgressSlotAction } from "./types";
 import { ProgressSlot } from "./ProgressSlot";
-import { getInitialProgressLine, validateProgressLine } from "./ProgressLine";
+import { ProgressLine } from "./ProgressLine";
 
 export const GoalRow = ({
   goal,
@@ -18,7 +18,7 @@ export const GoalRow = ({
   columns: Timeslot[];
 }) => {
   const initialProgressLine: ProgressCheckpoint[] =
-    getInitialProgressLine(goal);
+    ProgressLine.fromGoal(goal).toArray();
 
   const [progressLine, setProgressLine] = useState(initialProgressLine);
 
@@ -74,7 +74,8 @@ export const GoalRow = ({
       newFound.level = memo.level;
     }
 
-    const isValid = validateProgressLine(newProgressLine);
+    const isValid =
+      ProgressLine.fromProgressCheckpointList(newProgressLine).isValid();
     if (isValid) setProgressLine(newProgressLine);
     else {
       console.log("invalid progress line created; abort");

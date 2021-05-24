@@ -2,7 +2,7 @@ import { Goal, Timeslot } from "../types";
 import sortBy from "lodash/sortBy";
 import { ProgressCheckpoint } from "./types";
 
-class ProgressLine {
+export class ProgressLine {
   constructor(private readonly progressCheckpointList: ProgressCheckpoint[]) {}
 
   static fromGoal(goal: Goal) {
@@ -49,13 +49,3 @@ class ProgressLine {
     return this.progressCheckpointList;
   }
 }
-
-export const validateProgressLine = (
-  progressLine: ProgressCheckpoint[]
-): boolean => {
-  return ProgressLine.fromProgressCheckpointList(progressLine).isValid();
-};
-
-export const getInitialProgressLine = (goal: Goal): ProgressCheckpoint[] => {
-  return ProgressLine.fromGoal(goal).toArray();
-};
