@@ -7,15 +7,22 @@ export const validateProgressLine = (
 ): boolean => {
   const sorted = sortBy(progressLine, "when");
   let lastValue = undefined;
+  let level1found = false;
+  let level2found = false;
+  let level3found = false;
   for (let i = 0; i < sorted.length; i += 1) {
     const item: ProgressCheckpoint = sorted[i];
     if (!item.progressPlanned) continue;
 
     if (lastValue && item.progressPlanned < lastValue) return false;
 
+    level1found = level1found || item.level === 1;
+    level2found = level2found || item.level === 2;
+    level3found = level3found || item.level === 3;
+
     lastValue = item.progressPlanned;
   }
-  return true;
+  return level1found && level2found && level3found;
 };
 
 export const getInitialProgressLine = (goal: Goal): ProgressCheckpoint[] => {
