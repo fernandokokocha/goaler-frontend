@@ -42,14 +42,3 @@ export type Milestones = {
   level2: Timeslot;
   level3: Timeslot;
 };
-
-export const isMilestonesValid = (
-  level1when: Timeslot,
-  level2when: Timeslot,
-  level3when: Timeslot
-) => {
-  return (
-    Number(level2when) > Number(level1when) &&
-    Number(level3when) > Number(level2when)
-  );
-};
