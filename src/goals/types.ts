@@ -5,9 +5,7 @@ export type Inspiration = {
 
 export type Goal = {
   name: string;
-  level1: number;
-  level2: number;
-  level3: number;
+  milestones: Milestones;
   progress: number;
   explanation: string;
   inspiration: Inspiration;
@@ -31,14 +29,8 @@ export type ProgressSlot = {
   level?: Level;
 };
 
-export type GoalBrokenDown = {
-  goal: Goal;
-  progressLine: ProgressSlot[];
-};
-
 export type Milestones = {
-  goal: Goal;
-  level1: Timeslot;
-  level2: Timeslot;
-  level3: Timeslot;
+  level1: number;
+  level2: number;
+  level3: number;
 };

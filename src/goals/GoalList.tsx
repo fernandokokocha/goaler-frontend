@@ -98,19 +98,19 @@ export const GoalList = ({ goals }: { goals: Goal[] }) => {
                 percent={findCurrent(row).percent}
               ></CurrentTableCell>
               <LevelTableCell
-                level={row.level1}
-                reached={reached(row.level1, row.progress)}
+                level={row.milestones.level1}
+                reached={reached(row.milestones.level1, row.progress)}
                 previousReached={true}
               ></LevelTableCell>
               <LevelTableCell
-                level={row.level2}
-                reached={reached(row.level2, row.progress)}
-                previousReached={reached(row.level1, row.progress)}
+                level={row.milestones.level2}
+                reached={reached(row.milestones.level2, row.progress)}
+                previousReached={reached(row.milestones.level1, row.progress)}
               ></LevelTableCell>
               <LevelTableCell
-                level={row.level3}
-                reached={reached(row.level3, row.progress)}
-                previousReached={reached(row.level2, row.progress)}
+                level={row.milestones.level3}
+                reached={reached(row.milestones.level3, row.progress)}
+                previousReached={reached(row.milestones.level2, row.progress)}
               ></LevelTableCell>
             </TableRow>
           ))}

@@ -29,11 +29,13 @@ export const AddGoal = ({ addGoal }: { addGoal: (goal: Goal) => void }) => {
         link,
       },
       explanation,
-      level1,
-      level2,
-      level3,
+      milestones: {
+        level1,
+        level2,
+        level3,
+      },
       progress,
-      visualization
+      visualization,
     });
   };
 

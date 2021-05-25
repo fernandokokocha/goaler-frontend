@@ -1,16 +1,28 @@
-import { Goal, Timeslot } from "../types";
+import { Milestones, Timeslot } from "../types";
 import sortBy from "lodash/sortBy";
 import { ProgressCheckpoint } from "./types";
 
 export class ProgressLine {
   constructor(private readonly progressCheckpointList: ProgressCheckpoint[]) {}
 
-  static fromGoal(goal: Goal) {
+  static fromMilestones(milestones: Milestones) {
     return new ProgressLine([
-      { when: "2021" as Timeslot, progressPlanned: goal.level1, level: 1 },
-      { when: "2022" as Timeslot, progressPlanned: goal.level2, level: 2 },
-      { when: "2023" as Timeslot, progressPlanned: goal.level3 / 2 },
-      { when: "2024" as Timeslot, progressPlanned: goal.level3, level: 3 },
+      {
+        when: "2021" as Timeslot,
+        progressPlanned: milestones.level1,
+        level: 1,
+      },
+      {
+        when: "2022" as Timeslot,
+        progressPlanned: milestones.level2,
+        level: 2,
+      },
+      { when: "2023" as Timeslot, progressPlanned: milestones.level3 / 2 },
+      {
+        when: "2024" as Timeslot,
+        progressPlanned: milestones.level3,
+        level: 3,
+      },
       { when: "2025" as Timeslot },
       { when: "2026" as Timeslot },
       { when: "2027" as Timeslot },

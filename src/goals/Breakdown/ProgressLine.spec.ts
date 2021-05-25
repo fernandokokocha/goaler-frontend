@@ -9,16 +9,18 @@ const goal: Goal = {
     link: null,
   },
   explanation: "Nagrane video na YouTube",
-  level1: 10,
-  level2: 100,
-  level3: 1000,
+  milestones: {
+    level1: 10,
+    level2: 100,
+    level3: 1000,
+  },
   progress: 5,
   visualization: "https://i.ytimg.com/vi/hZm_WKd1POM/mqdefault.jpg",
 };
 
 describe("getInitialProgressLine", () => {
   it("generates dummy progress line based on goal", () => {
-    expect(ProgressLine.fromGoal(goal).toArray()).toEqual([
+    expect(ProgressLine.fromMilestones(goal.milestones).toArray()).toEqual([
       { level: 1, progressPlanned: 10, when: "2021" },
       { level: 2, progressPlanned: 100, when: "2022" },
       { progressPlanned: 500, when: "2023" },
@@ -33,7 +35,7 @@ describe("getInitialProgressLine", () => {
 
 describe("validateProgressLine", () => {
   it("validates positive initial progress line", () => {
-    const initialProgressLine = ProgressLine.fromGoal(goal);
+    const initialProgressLine = ProgressLine.fromMilestones(goal.milestones);
     expect(initialProgressLine.isValid()).toBe(true);
   });
 

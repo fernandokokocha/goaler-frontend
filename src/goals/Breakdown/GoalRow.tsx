@@ -17,8 +17,9 @@ export const GoalRow = ({
   index: number;
   columns: Timeslot[];
 }) => {
-  const initialProgressLine: ProgressCheckpoint[] =
-    ProgressLine.fromGoal(goal).toArray();
+  const initialProgressLine: ProgressCheckpoint[] = ProgressLine.fromMilestones(
+    goal.milestones
+  ).toArray();
 
   const [progressLine, setProgressLine] = useState(initialProgressLine);
 
