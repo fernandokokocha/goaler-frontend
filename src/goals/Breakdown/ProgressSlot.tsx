@@ -10,18 +10,25 @@ export const ProgressSlot = ({
   progressCheckpoint,
   onAction,
   columns,
+  index,
 }: {
   progressCheckpoint: ProgressCheckpoint;
-  onAction: (action: ProgressSlotAction, when: Timeslot, value?: number) => any;
+  onAction: (
+    index: number,
+    action: ProgressSlotAction,
+    when: Timeslot,
+    value?: number
+  ) => any;
   columns: Timeslot[];
+  index: number;
 }) => {
   let style: any = {};
   if (progressCheckpoint.level === 1) style.backgroundColor = "brown";
   if (progressCheckpoint.level === 2) style.backgroundColor = "grey";
   if (progressCheckpoint.level === 3) style.backgroundColor = "yellow";
 
-  const handleAction = (action: ProgressSlotAction) => {
-    onAction(action, progressCheckpoint.when);
+  const handleAction = (clickedIndex: number, action: ProgressSlotAction) => {
+    onAction(clickedIndex, action, progressCheckpoint.when);
   };
 
   const options = [];
@@ -31,6 +38,7 @@ export const ProgressSlot = ({
         progressCheckpoint={progressCheckpoint}
         onAction={onAction}
         key="add"
+        index={index}
       />
     );
   if (progressCheckpoint.progressPlanned)
@@ -40,6 +48,7 @@ export const ProgressSlot = ({
         onAction={onAction}
         columns={columns}
         key="move"
+        index={index}
       />
     );
   if (!progressCheckpoint.level && progressCheckpoint.progressPlanned)
@@ -49,7 +58,7 @@ export const ProgressSlot = ({
         size="small"
         color="primary"
         key="remove"
-        onClick={() => handleAction("remove")}
+        onClick={() => handleAction(index, "remove")}
       >
         Remove
       </Button>

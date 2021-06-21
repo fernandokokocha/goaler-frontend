@@ -11,9 +11,16 @@ import { Timeslot } from "../types";
 export default function AddValueDialog({
   progressCheckpoint,
   onAction,
+  index,
 }: {
   progressCheckpoint: ProgressCheckpoint;
-  onAction: (action: ProgressSlotAction, when: Timeslot, value?: number) => any;
+  onAction: (
+    index: number,
+    action: ProgressSlotAction,
+    when: Timeslot,
+    value?: number
+  ) => any;
+  index: number;
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(0);
@@ -27,7 +34,7 @@ export default function AddValueDialog({
   };
 
   const handleSubmit = () => {
-    onAction("add", progressCheckpoint.when, value);
+    onAction(index, "add", progressCheckpoint.when, value);
     handleClose();
   };
 

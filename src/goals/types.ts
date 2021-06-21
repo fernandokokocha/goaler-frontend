@@ -1,3 +1,5 @@
+import { ProgressCheckpoint } from "./Breakdown/types";
+
 export type Inspiration = {
   name: string;
   link: string | null;
@@ -33,4 +35,9 @@ export type Milestones = {
   level1: number;
   level2: number;
   level3: number;
+};
+
+export type GoalWithBreakdown = {
+  goal: Goal;
+  breakdown: ProgressCheckpoint[];
 };

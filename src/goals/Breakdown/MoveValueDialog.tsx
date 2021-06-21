@@ -12,10 +12,17 @@ export default function MoveValueDialog({
   progressCheckpoint,
   onAction,
   columns,
+  index,
 }: {
   progressCheckpoint: ProgressCheckpoint;
-  onAction: (action: ProgressSlotAction, when: Timeslot, value?: any) => any;
+  onAction: (
+    index: number,
+    action: ProgressSlotAction,
+    when: Timeslot,
+    value?: any
+  ) => any;
   columns: Timeslot[];
+  index: number;
 }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(progressCheckpoint.when);
@@ -29,7 +36,7 @@ export default function MoveValueDialog({
   };
 
   const handleSubmit = () => {
-    onAction("move", progressCheckpoint.when, value);
+    onAction(index, "move", progressCheckpoint.when, value);
     handleClose();
   };
 
