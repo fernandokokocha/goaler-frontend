@@ -4,7 +4,8 @@ import { GoalList } from "./GoalList";
 import { Visualization } from "./Visualization";
 import { Breakdown } from "./Breakdown";
 import { Switch, Route } from "react-router-dom";
-import { Goal } from "./types";
+import { Goal, GoalWithBreakdown } from "./types";
+import { ProgressLine } from "./Breakdown/ProgressLine";
 
 const rows: Goal[] = [
   {
@@ -87,27 +88,40 @@ const rows: Goal[] = [
   },
 ];
 
+const getInitialGoalsWithBreakdown = (goals: Goal[]): GoalWithBreakdown[] => {
+  return goals.map((goal) => ({
+    goal,
+    breakdown: ProgressLine.fromMilestones(goal.milestones).toArray(),
+  }));
+};
+
+const initialData = getInitialGoalsWithBreakdown(rows)
+
 export const Goals = () => {
-  const [goals, setGoals] = useState(rows);
+  const [goalsWithBreakdown, setGoalsWithBreakdown] = useState<GoalWithBreakdown[]>(initialData);
 
   const addGoal = (goal: Goal) => {
-    const newGoals = [...goals, goal];
-    setGoals(newGoals);
+    const goalWithBreakdown = [{
+      goal,
+      breakdown: getInitialGoalsWithBreakdown([goal])[0].breakdown
+    }]
+    const newGoalsWithBreakdown = [...goalsWithBreakdown, ...goalWithBreakdown];
+    setGoalsWithBreakdown(newGoalsWithBreakdown);
   };
 
   return (
     <Switch>
       <Route path="/visualization">
-        <Visualization goals={goals} />
+        <Visualization goalsWithBreakdown={goalsWithBreakdown} />
       </Route>
       <Route path="/table">
-        <GoalList goals={goals} />
+        <GoalList goalsWithBreakdown={goalsWithBreakdown} />
       </Route>
       <Route path="/add">
         <AddGoal addGoal={addGoal} />
       </Route>
       <Route path="/breakdown">
-        <Breakdown goals={goals} />
+        <Breakdown goalsWithBreakdown={goalsWithBreakdown} setGoalsWithBreakdown={setGoalsWithBreakdown}/>
       </Route>
       <Route path="/">
         <div>:)</div>

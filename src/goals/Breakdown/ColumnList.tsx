@@ -36,8 +36,8 @@ export const ColumnList = ({
         <Table aria-label="columns table" size="small">
           <TableBody>
             {columns.map((column, index) => (
-              <TableRow>
-                <TableCell align="center" key={`column-${index}`}>
+              <TableRow key={`column-${index}`}>
+                <TableCell align="center">
                   {column}
                 </TableCell>
               </TableRow>

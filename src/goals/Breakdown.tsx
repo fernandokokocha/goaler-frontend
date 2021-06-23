@@ -6,7 +6,7 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import { Goal, GoalWithBreakdown, Timeslot } from "./types";
+import { GoalWithBreakdown, Timeslot } from "./types";
 import { ColumnList } from "./Breakdown/ColumnList";
 import { GoalRow } from "./Breakdown/GoalRow";
 import { ProgressCheckpoint, ProgressSlotAction } from "./Breakdown/types";
@@ -25,18 +25,14 @@ export const initialColumns: Timeslot[] = [
   "2028",
 ];
 
-const getInitialGoalsWithBreakdown = (goals: Goal[]): GoalWithBreakdown[] => {
-  return goals.map((goal) => ({
-    goal,
-    breakdown: ProgressLine.fromMilestones(goal.milestones).toArray(),
-  }));
-};
-
-export const Breakdown = ({ goals }: { goals: Goal[] }) => {
+export const Breakdown = ({
+  goalsWithBreakdown,
+  setGoalsWithBreakdown
+}: { 
+  goalsWithBreakdown: GoalWithBreakdown[],
+  setGoalsWithBreakdown: (newGoalsWithBreakdown: GoalWithBreakdown[]) => void
+}) => {
   const [columns, setColumns] = useState(initialColumns);
-  const [goalsWithBreakdown, setGoalsWithBreakdown] = useState(
-    getInitialGoalsWithBreakdown(goals)
-  );
 
   useMemo(() => {
     const newGoalsWithBreakdown = cloneDeep(goalsWithBreakdown);
@@ -52,7 +48,7 @@ export const Breakdown = ({ goals }: { goals: Goal[] }) => {
       goalWithBreakdown.breakdown = sortBy(goalWithBreakdown.breakdown, "when");
     });
     setGoalsWithBreakdown(newGoalsWithBreakdown);
-  }, [columns, goalsWithBreakdown]);
+  }, [columns]);
 
   const handleAction = (
     index: number,
