@@ -1,4 +1,3 @@
-import React, { useMemo, useState } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -12,7 +11,6 @@ import { GoalRow } from "./Breakdown/GoalRow";
 import { ProgressCheckpoint, ProgressSlotAction } from "./Breakdown/types";
 import { ProgressLine } from "./Breakdown/ProgressLine";
 import cloneDeep from "lodash/cloneDeep";
-import sortBy from "lodash/sortBy";
 
 export const Breakdown = ({
   goalsWithBreakdown,

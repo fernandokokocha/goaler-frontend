@@ -163,7 +163,7 @@ export const Goals = () => {
         />
       </Route>
       <Route path="/calendar">
-        <Calendar goalsWithBreakdown={goalsWithBreakdown} />
+        <Calendar goalsWithBreakdown={goalsWithBreakdown} columns={columns} />
       </Route>
       <Route path="/">
         <div>:)</div>
