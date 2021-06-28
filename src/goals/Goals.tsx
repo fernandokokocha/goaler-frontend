@@ -6,6 +6,7 @@ import { Breakdown } from "./Breakdown";
 import { Switch, Route } from "react-router-dom";
 import { Goal, GoalWithBreakdown } from "./types";
 import { ProgressLine } from "./Breakdown/ProgressLine";
+import { Calendar } from "./Calendar";
 
 const rows: Goal[] = [
   {
@@ -122,6 +123,9 @@ export const Goals = () => {
       </Route>
       <Route path="/breakdown">
         <Breakdown goalsWithBreakdown={goalsWithBreakdown} setGoalsWithBreakdown={setGoalsWithBreakdown}/>
+      </Route>
+      <Route path="/calendar">
+        <Calendar goalsWithBreakdown={goalsWithBreakdown}/>
       </Route>
       <Route path="/">
         <div>:)</div>
