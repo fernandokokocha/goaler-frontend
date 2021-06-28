@@ -14,42 +14,17 @@ import { ProgressLine } from "./Breakdown/ProgressLine";
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";
 
-export const initialColumns: Timeslot[] = [
-  "2021",
-  "2022",
-  "2023",
-  "2024",
-  "2025",
-  "2026",
-  "2027",
-  "2028",
-];
-
 export const Breakdown = ({
   goalsWithBreakdown,
-  setGoalsWithBreakdown
-}: { 
-  goalsWithBreakdown: GoalWithBreakdown[],
-  setGoalsWithBreakdown: (newGoalsWithBreakdown: GoalWithBreakdown[]) => void
+  setGoalsWithBreakdown,
+  columns,
+  setColumns,
+}: {
+  goalsWithBreakdown: GoalWithBreakdown[];
+  setGoalsWithBreakdown: (newGoalsWithBreakdown: GoalWithBreakdown[]) => void;
+  columns: Timeslot[];
+  setColumns: (newColumns: Timeslot[]) => void;
 }) => {
-  const [columns, setColumns] = useState(initialColumns);
-
-  useMemo(() => {
-    const newGoalsWithBreakdown = cloneDeep(goalsWithBreakdown);
-    newGoalsWithBreakdown.forEach((goalWithBreakdown) => {
-      columns.forEach((column) => {
-        const found = goalWithBreakdown.breakdown.find(
-          ({ when }) => when === column
-        );
-        if (!found) {
-          goalWithBreakdown.breakdown.push({ when: column });
-        }
-      });
-      goalWithBreakdown.breakdown = sortBy(goalWithBreakdown.breakdown, "when");
-    });
-    setGoalsWithBreakdown(newGoalsWithBreakdown);
-  }, [columns]);
-
   const handleAction = (
     index: number,
     action: ProgressSlotAction,

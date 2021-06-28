@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { AddGoal } from "./AddGoal";
 import { GoalList } from "./GoalList";
 import { Visualization } from "./Visualization";
 import { Breakdown } from "./Breakdown";
 import { Switch, Route } from "react-router-dom";
-import { Goal, GoalWithBreakdown } from "./types";
+import { Goal, GoalWithBreakdown, Timeslot } from "./types";
 import { ProgressLine } from "./Breakdown/ProgressLine";
 import { Calendar } from "./Calendar";
+import cloneDeep from "lodash/cloneDeep";
+import sortBy from "lodash/sortBy";
 
 const rows: Goal[] = [
   {
@@ -96,16 +98,47 @@ const getInitialGoalsWithBreakdown = (goals: Goal[]): GoalWithBreakdown[] => {
   }));
 };
 
-const initialData = getInitialGoalsWithBreakdown(rows)
+const initialData = getInitialGoalsWithBreakdown(rows);
+
+export const initialColumns: Timeslot[] = [
+  "2021",
+  "2022",
+  "2023",
+  "2024",
+  "2025",
+  "2026",
+  "2027",
+  "2028",
+];
 
 export const Goals = () => {
-  const [goalsWithBreakdown, setGoalsWithBreakdown] = useState<GoalWithBreakdown[]>(initialData);
+  const [goalsWithBreakdown, setGoalsWithBreakdown] =
+    useState<GoalWithBreakdown[]>(initialData);
+  const [columns, setColumns] = useState(initialColumns);
+
+  useMemo(() => {
+    const newGoalsWithBreakdown = cloneDeep(goalsWithBreakdown);
+    newGoalsWithBreakdown.forEach((goalWithBreakdown) => {
+      columns.forEach((column) => {
+        const found = goalWithBreakdown.breakdown.find(
+          ({ when }) => when === column
+        );
+        if (!found) {
+          goalWithBreakdown.breakdown.push({ when: column });
+        }
+      });
+      goalWithBreakdown.breakdown = sortBy(goalWithBreakdown.breakdown, "when");
+    });
+    setGoalsWithBreakdown(newGoalsWithBreakdown);
+  }, [columns]);
 
   const addGoal = (goal: Goal) => {
-    const goalWithBreakdown = [{
-      goal,
-      breakdown: getInitialGoalsWithBreakdown([goal])[0].breakdown
-    }]
+    const goalWithBreakdown = [
+      {
+        goal,
+        breakdown: getInitialGoalsWithBreakdown([goal])[0].breakdown,
+      },
+    ];
     const newGoalsWithBreakdown = [...goalsWithBreakdown, ...goalWithBreakdown];
     setGoalsWithBreakdown(newGoalsWithBreakdown);
   };
@@ -122,10 +155,15 @@ export const Goals = () => {
         <AddGoal addGoal={addGoal} />
       </Route>
       <Route path="/breakdown">
-        <Breakdown goalsWithBreakdown={goalsWithBreakdown} setGoalsWithBreakdown={setGoalsWithBreakdown}/>
+        <Breakdown
+          goalsWithBreakdown={goalsWithBreakdown}
+          setGoalsWithBreakdown={setGoalsWithBreakdown}
+          columns={columns}
+          setColumns={setColumns}
+        />
       </Route>
       <Route path="/calendar">
-        <Calendar goalsWithBreakdown={goalsWithBreakdown}/>
+        <Calendar goalsWithBreakdown={goalsWithBreakdown} />
       </Route>
       <Route path="/">
         <div>:)</div>
