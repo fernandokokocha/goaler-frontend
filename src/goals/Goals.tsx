@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { AddGoal } from "./AddGoal";
 import { GoalList } from "./GoalList";
 import { Visualization } from "./Visualization";
-import { Breakdown } from "./Breakdown";
+import { YearByYear } from "./YearByYear";
 import { Switch, Route } from "react-router-dom";
 import { Goal, GoalWithBreakdown, Timeslot } from "./types";
 import { ProgressLine } from "./Breakdown/ProgressLine";
@@ -154,8 +154,8 @@ export const Goals = () => {
       <Route path="/add">
         <AddGoal addGoal={addGoal} />
       </Route>
-      <Route path="/breakdown">
-        <Breakdown
+      <Route path="/year-by-year">
+        <YearByYear
           goalsWithBreakdown={goalsWithBreakdown}
           setGoalsWithBreakdown={setGoalsWithBreakdown}
           columns={columns}

@@ -23,11 +23,11 @@ export const SideMenu = () => {
         </ListItemIcon>
         <ListItemText primary="Visualization" />
       </ListItem>
-      <ListItem button key="breakdown" component={Link} to="/breakdown">
+      <ListItem button key="year-by-year" component={Link} to="/year-by-year">
         <ListItemIcon>
           <RestaurantIcon />
         </ListItemIcon>
-        <ListItemText primary="Breakdown" />
+        <ListItemText primary="Year by year" />
       </ListItem>
       <ListItem button key="add" component={Link} to="/add">
         <ListItemIcon>

@@ -6,13 +6,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { GoalWithBreakdown, Timeslot } from "./types";
-import { ColumnList } from "./Breakdown/ColumnList";
 import { GoalRow } from "./Breakdown/GoalRow";
 import { ProgressCheckpoint, ProgressSlotAction } from "./Breakdown/types";
 import { ProgressLine } from "./Breakdown/ProgressLine";
 import cloneDeep from "lodash/cloneDeep";
+import { Button } from "@material-ui/core";
 
-export const Breakdown = ({
+export const YearByYear = ({
   goalsWithBreakdown,
   setGoalsWithBreakdown,
   columns,
@@ -75,6 +75,13 @@ export const Breakdown = ({
     }
   };
 
+  const addYear = () => {
+    const maxColumn = columns[columns.length - 1];
+    const newColumn = String(parseInt(maxColumn) + 1);
+    const newColumns = [...columns, newColumn];
+    setColumns(newColumns);
+  };
+
   return (
     <>
       <TableContainer component={Paper}>
@@ -88,6 +95,16 @@ export const Breakdown = ({
                   {column}
                 </TableCell>
               ))}
+              <TableCell align="center" key="time-column-add">
+                <Button
+                  onClick={addYear}
+                  variant="contained"
+                  size="small"
+                  color="secondary"
+                >
+                  Add
+                </Button>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -104,7 +121,6 @@ export const Breakdown = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <ColumnList columns={columns} setColumns={setColumns} />
     </>
   );
 };
