@@ -9,6 +9,11 @@ import Avatar from "@material-ui/core/Avatar";
 import EventIcon from "@material-ui/icons/Event";
 import { ProgressCheckpoint } from "./Breakdown/types";
 
+type CalendarEntry = {
+  goal: Goal;
+  progressCheckpoint: ProgressCheckpoint;
+};
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -28,11 +33,14 @@ export const Calendar = ({
   const classes = useStyles();
 
   const getForColumn = (column: Timeslot): any[] => {
-    const ret: any[] = [];
+    const ret: CalendarEntry[] = [];
     goalsWithBreakdown.forEach((goalsWithBreakdown: GoalWithBreakdown) => {
       goalsWithBreakdown.breakdown.forEach((checkpoint: ProgressCheckpoint) => {
         if (checkpoint.when === column && checkpoint.progressPlanned) {
-          ret.push(goalsWithBreakdown.goal);
+          ret.push({
+            goal: goalsWithBreakdown.goal,
+            progressCheckpoint: checkpoint,
+          });
         }
       });
     });
@@ -52,7 +60,7 @@ export const Calendar = ({
             <Typography variant="h6" align="center" component="h6" gutterBottom>
               {column}
             </Typography>
-            {getForColumn(column).map((goal: Goal) => (
+            {getForColumn(column).map((entry: CalendarEntry) => (
               <List className={classes.root}>
                 <ListItem>
                   <ListItemAvatar>
@@ -60,7 +68,10 @@ export const Calendar = ({
                       <EventIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText primary={goal.name} secondary="Jan 9, 2014" />
+                  <ListItemText
+                    primary={entry.goal.name}
+                    secondary={entry.progressCheckpoint.progressPlanned}
+                  />
                 </ListItem>
               </List>
             ))}
