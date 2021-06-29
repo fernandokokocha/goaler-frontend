@@ -7,8 +7,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { GoalWithBreakdown, Timeslot } from "./types";
 import { GoalRow } from "./Breakdown/GoalRow";
-import { ProgressCheckpoint, ProgressSlotAction } from "./Breakdown/types";
-import { ProgressLine } from "./Breakdown/ProgressLine";
+import { ProgressCheckpoint, ProgressSlotAction } from "./types";
+import { ProgressLine } from "../models/ProgressLine";
 import cloneDeep from "lodash/cloneDeep";
 import { Button } from "@material-ui/core";
 

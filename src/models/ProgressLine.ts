@@ -1,6 +1,5 @@
-import { Milestones, Timeslot } from "../types";
+import { Milestones, Timeslot, ProgressCheckpoint } from "../goals/types";
 import sortBy from "lodash/sortBy";
-import { ProgressCheckpoint } from "./types";
 
 export class ProgressLine {
   constructor(private readonly progressCheckpointList: ProgressCheckpoint[]) {}

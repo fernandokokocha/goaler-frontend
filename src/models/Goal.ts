@@ -1,4 +1,4 @@
-import { CurrentLevel, Goal } from "./types";
+import { CurrentLevel, Goal } from "../goals/types";
 
 export const reached = (level: number, progress: number): boolean =>
   progress >= level;

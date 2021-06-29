@@ -1,10 +1,9 @@
 import React from "react";
 import TableCell from "@material-ui/core/TableCell";
-import { Timeslot } from "../types";
+import { ProgressCheckpoint, ProgressSlotAction, Timeslot } from "../types";
 import { Button } from "@material-ui/core";
 import AddValueDialog from "./AddValueDialog";
 import MoveValueDialog from "./MoveValueDialog";
-import { ProgressCheckpoint, ProgressSlotAction } from "./types";
 
 export const ProgressSlot = ({
   progressCheckpoint,

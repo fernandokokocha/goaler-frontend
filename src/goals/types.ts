@@ -1,5 +1,3 @@
-import { ProgressCheckpoint } from "./Breakdown/types";
-
 export type Inspiration = {
   name: string;
   link: string | null;
@@ -41,3 +39,11 @@ export type GoalWithBreakdown = {
   goal: Goal;
   breakdown: ProgressCheckpoint[];
 };
+
+export type ProgressCheckpoint = {
+  when: Timeslot;
+  progressPlanned?: number;
+  level?: 1 | 2 | 3;
+};
+
+export type ProgressSlotAction = "move" | "remove" | "add";

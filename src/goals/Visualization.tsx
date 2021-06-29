@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InfoIcon from "@material-ui/icons/Info";
 import { Avatar, Tooltip } from "@material-ui/core";
 import { brown, grey, yellow } from "@material-ui/core/colors";
-import { findCurrent } from "./GoalModel";
+import { findCurrent } from "../models/Goal";
 import { Goal, GoalWithBreakdown } from "./types";
 
 const useStyles = makeStyles((theme: Theme) =>

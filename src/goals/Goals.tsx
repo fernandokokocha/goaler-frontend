@@ -5,7 +5,7 @@ import { Visualization } from "./Visualization";
 import { YearByYear } from "./YearByYear";
 import { Switch, Route } from "react-router-dom";
 import { Goal, GoalWithBreakdown, Timeslot } from "./types";
-import { ProgressLine } from "./Breakdown/ProgressLine";
+import { ProgressLine } from "../models/ProgressLine";
 import { Calendar } from "./Calendar";
 import cloneDeep from "lodash/cloneDeep";
 import sortBy from "lodash/sortBy";

@@ -1,8 +1,12 @@
 import React from "react";
 import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
-import { Goal, Timeslot } from "../types";
-import { ProgressCheckpoint, ProgressSlotAction } from "./types";
+import {
+  ProgressCheckpoint,
+  ProgressSlotAction,
+  Goal,
+  Timeslot,
+} from "../types";
 import { ProgressSlot } from "./ProgressSlot";
 
 export const GoalRow = ({

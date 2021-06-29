@@ -1,5 +1,4 @@
-import { Goal } from "../types";
-import { ProgressCheckpoint } from "./types";
+import { ProgressCheckpoint, Goal } from "../goals/types";
 import { ProgressLine } from "./ProgressLine";
 
 const goal: Goal = {

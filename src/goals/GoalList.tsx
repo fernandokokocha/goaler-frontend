@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { ProgressBar } from "react-bootstrap";
-import { findCurrent, reached } from "./GoalModel";
+import { findCurrent, reached } from "../models/Goal";
 import { Goal, GoalWithBreakdown } from "./types";
 
 const useStyles = makeStyles({
